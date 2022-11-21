@@ -1,0 +1,8 @@
+{
+    "events": {
+        {"t": 10, "pressed": true},
+        {"t": 50, "pressed": false},
+        {"t": 100, "pressed": true},
+        {"t": 200, "pressed": false},
+    }
+}

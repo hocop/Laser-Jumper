@@ -17,7 +17,11 @@ GameEngine::GameEngine() : m_bgColor(sf::Color(18, 33, 43))
     // Load textures
     if (!m_laserTexture.loadFromFile("resource/textures/laser_beam.png"))
         std::cout << "Error loading texture" << std::endl;
-    if (!m_contactTexture.loadFromFile("resource/textures/contact.png"))
+    if (!m_explosionTexture.loadFromFile("resource/textures/explosion.png"))
+        std::cout << "Error loading texture" << std::endl;
+    if (!m_reactorRTexture.loadFromFile("resource/textures/reactor_r.png"))
+        std::cout << "Error loading texture" << std::endl;
+    if (!m_reactorROnPlayerTexture.loadFromFile("resource/textures/reactor_r_on_player.png"))
         std::cout << "Error loading texture" << std::endl;
 }
 
@@ -32,6 +36,9 @@ void GameEngine::loadMap(const std::string& path)
     std::ifstream f(path);
     json map = json::parse(f);
 
+    Vec2 diffPrev;
+    std::shared_ptr<Entity> linePrev;
+
     for (int i = 0; i < map["X"].size() - 1; i++)
     {
         Vec2 start(map["X"][i], map["Y"][i]);
@@ -41,30 +48,66 @@ void GameEngine::loadMap(const std::string& path)
         end.y = -end.y;
 
         Vec2 diff = end - start;
-        double angle = std::atan2(diff.y, diff.x) * 180 / M_PI;
-        spawnLine(0.5 * (start + end), diff.norm(), angle);
+        if (diff.x < 0)
+            diff = -diff;
+
+        if(i == 0)
+            diffPrev = diff;
+
+        double angle = std::atan2(diff.y, diff.x);
+        Vec2 diffAvg = diffPrev.unit() + diff.unit();
+        double angleLeft = std::atan2(diffAvg.y, diffAvg.x);
+
+        if(i != 0)
+            linePrev->cLineShape->angleRight = angleLeft;
+
+        linePrev = spawnLine(0.5 * (start + end), diff.norm(), angle);
+        linePrev->cLineShape->angleLeft = angleLeft;
+
+        diffPrev = diff;
     }
+
+    // Add start booster
+    spawnEffect(Vec2(0, -1), EFFECT_REACTOR_R);
 }
 
 
 void GameEngine::run()
 {
     auto start = std::chrono::high_resolution_clock::now();
-    auto prevStart = start;
-    int duration;
+    // auto elapsed = start;
+    int stepsCount;
     // Main loop
     while(m_running)
     {
-        start = std::chrono::high_resolution_clock::now();
-        duration = std::chrono::duration_cast<std::chrono::microseconds>(start - prevStart).count();
-        // std::cout << duration << std::endl;
-        usleep(std::max(DELTA_T_us - duration, 0));
-        m_entities.update();
+        auto startF = std::chrono::high_resolution_clock::now();
+
+        // Process user input
         sUserInput();
+
+        // Add and delete entities
+        m_entities.update();
+        
+        // Detect and process all collisions
         sCollision();
-        sRender();
+
+        // Render every so often
+        if (stepsCount % STEPS_PER_FRAME == 0)
+        {
+            sRender();
+
+            auto elapsed = std::chrono::high_resolution_clock::now() - start;
+            usleep(std::max(DELTA_T_us * STEPS_PER_FRAME - std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count(), long(0)));
+            start = std::chrono::high_resolution_clock::now();
+        }
+
+        // Physics step
         sPhysics();
-        prevStart = start;
+
+        // Process temporary things such as effects
+        sLifetime();
+
+        stepsCount++;
     }
 }
 
@@ -90,9 +133,10 @@ std::shared_ptr<Entity> GameEngine::spawnPlayer(const Vec2& pos)
     player->cLaser = std::make_shared<CLaser>(
         CLaser(
             1,
-            0.05,
+            0.03,
+            0.1,
             m_laserTexture,
-            m_contactTexture
+            m_explosionTexture
         )
     );
 
@@ -144,7 +188,25 @@ std::shared_ptr<Entity> GameEngine::spawnCamera(const CameraType& focus)
 {
     std::shared_ptr<Entity> camera = m_entities.addEntity(TAG_CAMERA);
     camera->cCamera = std::make_shared<CCamera>();
+    camera->cPosition = std::make_shared<CPosition>();
     camera->cCamera->type = focus;
 
     return camera;
+}
+
+
+std::shared_ptr<Entity> GameEngine::spawnEffect(const Vec2& pos, const EffectType& type)
+{
+    std::shared_ptr<Entity> effect = m_entities.addEntity(TAG_EFFECT);
+    effect->cPosition = std::make_shared<CPosition>(pos);
+    effect->cCollision = std::make_shared<CCollision>(0, false);
+    effect->cEffect = std::make_shared<CEffect>(0.75, 1, type, m_reactorRTexture);
+    effect->cRectShape = std::make_shared<CRectShape>(
+        0.75, 1, 0, sf::Color(255, 255, 255, 128), sf::Color(0, 0, 0, 0), 0
+    );
+
+    // Set position
+    resetGeometryPosition(effect);
+
+    return effect;
 }

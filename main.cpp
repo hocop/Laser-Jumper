@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
 {
     GameEngine game;
 
-    game.loadMap("resource/tracks/hard/level1.json");
+    game.loadMap("resource/tracks/deadly/level3.json");
 
     game.spawnPlayer(Vec2(0, -1));
 

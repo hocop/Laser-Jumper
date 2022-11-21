@@ -10,18 +10,7 @@ void GameEngine::sRender()
     if(cameras.size() > 0)
     {
         auto camera = cameras[0];
-        // Shift camera to the player
-        if(camera->cCamera->type == CAMERA_FOCUS_PLAYER && players.size() > 0)
-        {
-            float aspect = float(m_window.getSize().y) / float(m_window.getSize().x);
-            float width  = 20;
-            float height = width * aspect;
-            Vec2 origin;
-            origin.x = players[players.size() - 1]->cPosition->vec.x + 1;
-
-            camera->cCamera->view.reset(sf::FloatRect(origin.x - width * 0.5, origin.y - height * 0.5, width, height));
-            m_window.setView(camera->cCamera->view);
-        }
+        m_window.setView(camera->cCamera->view);
     }
 
     m_window.clear(m_bgColor);
@@ -32,8 +21,15 @@ void GameEngine::sRender()
         resetGeometryPosition(entity);
         drawEntity(m_window, entity);
     }
+
     // Draw blocks
     for (auto entity : m_entities.getEntities(TAG_BLOCK))
+    {
+        drawEntity(m_window, entity);
+    }
+
+    // Draw effects
+    for (auto entity : m_entities.getEntities(TAG_EFFECT))
     {
         drawEntity(m_window, entity);
     }
@@ -47,18 +43,26 @@ void drawEntity(sf::RenderWindow& window, const std::shared_ptr<Entity> &entity)
     if (entity->cLaser)
     {
         window.draw(entity->cLaser->laserSprite);
-        double dl = entity->cLaser->length - (entity->cLaser->isActive? entity->cLaser->lengthActive : entity->cLaser->lengthNeutral);
+        double dl = entity->cLaser->length - entity->cLaser->lengthTgt;
         if (dl < 0)
         {
-            window.draw(entity->cLaser->contactSprite);
+            window.draw(entity->cLaser->explosionSprite);
         }
     }
     if (entity->cCircleShape)
         window.draw(entity->cCircleShape->circle);
+
     if (entity->cRectShape)
         window.draw(entity->cRectShape->rect);
+
     if (entity->cLineShape)
         window.draw(entity->cLineShape->rect, 4, sf::Quads);
+    
+    if (entity->cReactor)
+        window.draw(entity->cReactor->sprite);
+    
+    if (entity->cEffect)
+        window.draw(entity->cEffect->sprite);
 }
 
 
@@ -83,17 +87,25 @@ void resetGeometryPosition(std::shared_ptr<Entity> &entity)
 
     if (entity->cLaser)
     {
-        double thickness = entity->cLaser->isActive? entity->cLaser->thicknessActive : entity->cLaser->thicknessNeutral;
+        double dl = entity->cLaser->lengthTgt - entity->cLaser->length;
+        double laserThickness = entity->cLaser->laserThicknessNeutral + dl * (entity->cLaser->laserThicknessActive - entity->cLaser->laserThicknessNeutral);
+        double explosionThickness = entity->cLaser->explosionThicknessNeutral + std::sqrt(dl) * (entity->cLaser->explosionThicknessActive - entity->cLaser->explosionThicknessNeutral);
 
-        entity->cLaser->laserSprite.setOrigin(sf::Vector2f(8, 0));
-        entity->cLaser->laserSprite.setScale(sf::Vector2f(thickness / 16, entity->cLaser->length / 64));
+        auto laserTexSize = entity->cLaser->laserSprite.getTexture()->getSize();
+        entity->cLaser->laserSprite.setScale(sf::Vector2f(laserThickness / laserTexSize.x, entity->cLaser->length / laserTexSize.y));
         entity->cLaser->laserSprite.setPosition(entity->cPosition->vec.as_sf());
 
-        entity->cLaser->contactSprite.setOrigin(sf::Vector2f(16, 16));
-        entity->cLaser->contactSprite.setScale(sf::Vector2f(thickness * 2 / 16, thickness * 2 / 16));
-        Vec2 contactPos = entity->cPosition->vec;
-        contactPos.y += entity->cLaser->length;
-        entity->cLaser->contactSprite.setPosition(contactPos.as_sf());
-        entity->cLaser->contactSprite.setRotation(entity->cLaser->attackAngle * 180 / M_PI);
+        auto explosionTexSize = entity->cLaser->explosionSprite.getTexture()->getSize();
+        entity->cLaser->explosionSprite.setScale(sf::Vector2f(explosionThickness * 2 / explosionTexSize.x, explosionThickness / explosionTexSize.y));
+        Vec2 explosionPos = entity->cPosition->vec;
+        explosionPos.y += entity->cLaser->length;
+        entity->cLaser->explosionSprite.setPosition(explosionPos.as_sf());
+        entity->cLaser->explosionSprite.setRotation(entity->cLaser->attackAngle * 180 / M_PI);
     }
+
+    if (entity->cEffect)
+        entity->cEffect->sprite.setPosition(entity->cPosition->vec.as_sf());
+
+    if (entity->cReactor)
+        entity->cReactor->sprite.setPosition(entity->cPosition->vec.as_sf());
 }

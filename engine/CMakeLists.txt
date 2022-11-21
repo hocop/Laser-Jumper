@@ -8,6 +8,7 @@ add_library(
     systems/sPhysics.cpp
     systems/sRender.cpp
     systems/sUserInput.cpp
+    systems/sLifetime.cpp
 )
 
 target_link_libraries(engine PRIVATE sfml-graphics)

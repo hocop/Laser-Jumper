@@ -149,11 +149,14 @@ void detectCircleAndLineCollision(const std::shared_ptr<Entity>& circle, const s
 
 void detectLaserAndLineCollision(const std::shared_ptr<Entity>& player, const std::shared_ptr<Entity>& line)
 {
-    // Get line params
-    double angle = line->cLineShape->angle;
-    double lHalf = line->cLineShape->length * 0.5 * std::cos(angle);
     // Compute player relative position
     Vec2 relpos = player->cPosition->vec - line->cPosition->vec;
+    // Get line params
+    const double& angle = line->cLineShape->angle;
+    double l = line->cLineShape->length * std::cos(angle);
+    double lHalf = l * 0.5;
+    double coefRight = relpos.x / l + 0.5;
+    double angleInterp = line->cLineShape->angleLeft * (1 - coefRight) + line->cLineShape->angleRight * coefRight;
     // Detect collision
     if (relpos.x >= -lHalf && relpos.x <= lHalf)
     {
@@ -161,7 +164,39 @@ void detectLaserAndLineCollision(const std::shared_ptr<Entity>& player, const st
         if (l > 0 && l < player->cLaser->length)
         {
             player->cLaser->length = l;
-            player->cLaser->attackAngle = angle;
+            player->cLaser->attackAngle = angleInterp;
+        }
+    }
+}
+
+
+void GameEngine::processCollisions(std::shared_ptr<Entity>& player, std::shared_ptr<Entity>& entity)
+{
+    if (entity->cCollision)
+    {
+        Collision collision;
+        // Detect collision
+        if (entity->cRectShape)
+            detectCircleAndBoxCollision(player, entity, collision);
+        if (entity->cLineShape)
+        {
+            detectCircleAndLineCollision(player, entity, collision);
+            detectLaserAndLineCollision(player, entity);
+        }
+        // Resolve collision
+        if (collision.distance > 0)
+        {
+            if (entity->cCollision->physical)
+            {
+                player->cPosition->vec += collision.normal * collision.distance;
+                Vec2& pvel = player->cVelocity->vec;
+                pvel += collision.normal * (std::max(-(pvel * collision.normal), 0.0) * (1.0 + std::sqrt(entity->cCollision->bounciness)));
+            }
+            if (entity->cEffect)
+            {
+                if (entity->cEffect->type == EFFECT_REACTOR_R)
+                    player->cReactor = std::make_shared<CReactor>(Vec2(10, 0), 0.5, m_reactorROnPlayerTexture);
+            }
         }
     }
 }
@@ -170,34 +205,21 @@ void detectLaserAndLineCollision(const std::shared_ptr<Entity>& player, const st
 void GameEngine::sCollision()
 {
     // Player-Block interaction
-    for (auto p : m_entities.getEntities(TAG_PLAYER))
+    for (auto player : m_entities.getEntities(TAG_PLAYER))
     {
         // Reset player's laser
-        p->cLaser->length = (p->cLaser->isActive? p->cLaser->lengthActive : p->cLaser->lengthNeutral) + CONTACT_EPS;
+        player->cLaser->length = player->cLaser->lengthTgt + CONTACT_EPS;
+
+        // Get player's coordinate key
+        auto neighboringChunks = coordinateToKeys(player->cPosition->vec, CHUNK_SIZE);
 
         // Collisions
-        for (auto b : m_entities.getEntities(TAG_BLOCK))
+        for (auto coordKey : neighboringChunks)
         {
-            Collision collision;
-            // Detect collision
-            if (b->cCollision)
-            {
-                if (b->cRectShape)
-                    detectCircleAndBoxCollision(p, b, collision);
-                if (b->cLineShape)
-                {
-                    detectCircleAndLineCollision(p, b, collision);
-                    detectLaserAndLineCollision(p, b);
-                }
-            }
-            // Resolve collision
-            if (collision.distance > 0)
-            {
-                p->cPosition->vec += collision.normal * collision.distance;
-                Vec2& pvel = p->cVelocity->vec;
-                pvel += collision.normal * (std::max(-(pvel * collision.normal), 0.0) * (1.0 + std::sqrt(b->cCollision->bounciness)));
-                // b->cRectShape->rect.setFillColor(p->cCircleShape->circle.getFillColor());
-            }
+            for (auto block : m_entities.getEntities(TAG_BLOCK, coordKey))
+                processCollisions(player, block);
+            for (auto effect : m_entities.getEntities(TAG_EFFECT, coordKey))
+                processCollisions(player, effect);
         }
     }
 }

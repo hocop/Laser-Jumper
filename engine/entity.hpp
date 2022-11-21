@@ -42,8 +42,10 @@ public:
     std::shared_ptr<CControls>      cControls;
     std::shared_ptr<CLaser>         cLaser;
     std::shared_ptr<CEffect>        cEffect;
+    // Effects on player
+    std::shared_ptr<CReactor>       cReactor;
     // Camera
-    std::shared_ptr<CCamera>          cCamera;
+    std::shared_ptr<CCamera>        cCamera;
 
 
     EntityTag const& tag() {return m_tag;};

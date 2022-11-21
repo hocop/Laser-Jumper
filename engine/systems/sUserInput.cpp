@@ -16,15 +16,14 @@ void GameEngine::sUserInput()
         {
             if (event.mouseButton.button == sf::Mouse::Left)
             {
-                // Set view from camera
+                // Get click position and spawn player
                 auto cameras = m_entities.getEntities(TAG_CAMERA);
                 if(cameras.size() > 0)
                 {
-                    sf::Vector2f clickPos(event.mouseButton.x / 1280.0 * 2 - 1, 1 - event.mouseButton.y / 720.0 * 2);
+                    auto winSz = m_window.getSize();
+                    sf::Vector2f clickPos(event.mouseButton.x / float(winSz.x) * 2 - 1, 1 - event.mouseButton.y / float(winSz.y) * 2);
                     const sf::Transform& tr = cameras[0]->cCamera->view.getInverseTransform();
-                    Vec2(clickPos).print();
                     clickPos = tr.transformPoint(clickPos);
-                    Vec2(clickPos).print();
                     // Spawn player
                     spawnPlayer(clickPos);
                 }
@@ -54,7 +53,9 @@ void GameEngine::sUserInput()
                 // Control last player
                 EntityVec& players = m_entities.getEntities(TAG_PLAYER);
                 if(players.size() > 0)
-                    players[players.size() - 1]->cLaser->isActive = true;
+                {
+                    players[players.size() - 1]->cLaser->lengthTgt = players[players.size() - 1]->cLaser->lengthActive;
+                }
             }
             if (event.key.code == sf::Keyboard::Enter)
             {
@@ -76,7 +77,9 @@ void GameEngine::sUserInput()
                 // Control last player
                 EntityVec& players = m_entities.getEntities(TAG_PLAYER);
                 if(players.size() > 0)
-                    players[players.size() - 1]->cLaser->isActive = false;
+                {
+                    players[players.size() - 1]->cLaser->lengthTgt = players[players.size() - 1]->cLaser->lengthNeutral;
+                }
             }
         }
     }

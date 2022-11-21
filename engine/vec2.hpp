@@ -29,44 +29,44 @@ public:
 	Vec2& operator= (sf::Vector2u const& vec) {this->x = vec.x; this->y = vec.y; return *this;};
 
 	// Prints Vector in (x,y) format (Cartesian Coordinates)
-	void print();
+	void print() const;
 	friend std::ostream& operator<<(std::ostream& as, const Vec2& obj);
 
 	// Returns SFML sf::Vector2f representation
-	sf::Vector2f as_sf();
+	sf::Vector2f as_sf() const;
 
 	// Norm of the vector
-	double norm();
+	double norm() const;
 	// Squared norm of the vector
-	double norm2();
+	double norm2() const;
 
 	// Unit of this vector
-	Vec2 unit();
+	Vec2 unit() const;
 
     // Rotate by radians
-	Vec2 rotate (double angle);
+	Vec2 rotate (double angle) const;
 
 	// Returns this vector rotated by 90 degrees
-	Vec2 rot90();
+	Vec2 rot90() const;
 
 	// Overloading "+" operator
-	Vec2 operator+ (Vec2 const& obj);
+	Vec2 operator+ (Vec2 const& obj) const;
 	Vec2& operator+= (Vec2 const& obj);
 
 	// Overloading "-" operator
-	Vec2 operator- (Vec2 const& obj);
+	Vec2 operator- (Vec2 const& obj) const;
 	Vec2& operator-= (Vec2 const& obj);
-	Vec2 operator- ();
+	Vec2 operator- () const;
 
 	// Overloading "*" operator for dot product
-	double operator* (Vec2 const& obj);
+	double operator* (Vec2 const& obj) const;
 
     // Overloading "*" operator for multiplication by a scalar
-	Vec2 operator* (const double& scalar);
+	Vec2 operator* (const double& scalar) const;
 	friend Vec2 operator* (const double& scalar, const Vec2& obj);
 	Vec2& operator*= (const double& scalar);
 
     // Overloading "*" operator for dividing by a scalar
-	Vec2 operator/ (const double& scalar);
+	Vec2 operator/ (const double& scalar) const;
 	Vec2& operator/= (const double& scalar);
 };
