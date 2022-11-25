@@ -1,6 +1,6 @@
 add_library(
     engine
-    entityManager.cpp
+    entity/entityManager.cpp
     utils/assets.cpp
     utils/vec2.cpp
     utils/keycodes.cpp

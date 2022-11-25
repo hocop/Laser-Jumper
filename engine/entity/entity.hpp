@@ -5,7 +5,7 @@
 #include <map>
 #include <vector>
 
-#include "components.hpp"
+#include "../components/components.hpp"
 
 
 enum EntityTag

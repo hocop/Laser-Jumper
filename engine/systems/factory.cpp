@@ -82,11 +82,11 @@ std::shared_ptr<Entity> GameEngine::spawnPlayer(const Vec2& pos)
     // Bind camera to player
     if (m_camera)
         if (m_camera->cCamera->type == CAMERA_FOCUS_PLAYER)
-            m_camera->cCamera->target = std::shared_ptr<Entity>(m_player);
+            m_camera->cCamera->target = m_player;
     
     // Bind timer to player
     if (m_timer)
-        m_timer->cHudTimer->target = std::shared_ptr<Entity>(m_player);
+        m_timer->cHudTimer->target = m_player;
 
     resetGeometryPosition(m_player);
     return m_player;

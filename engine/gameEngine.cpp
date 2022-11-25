@@ -39,7 +39,7 @@ void GameEngine::run()
 }
 
 
-GameEngine::GameEngine() : m_bgColor(sf::Color(18, 33, 43))
+GameEngine::GameEngine()
 {
     // Create window
     sf::ContextSettings settings;

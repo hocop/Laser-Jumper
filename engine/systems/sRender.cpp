@@ -7,7 +7,7 @@ void GameEngine::sRender()
 
     // Set view from camera
     m_window.setView(m_camera->cCamera->view);
-    m_window.clear(m_bgColor);
+    m_window.clear(sf::Color(18, 33, 43));
 
     // Shaders' variables
     for (auto& [key, shader] : m_assets.getShaders())
