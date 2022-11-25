@@ -3,7 +3,9 @@
 #include <iostream>
 #include <memory>
 #include <map>
+#include <unordered_map>
 #include <vector>
+#include <sstream>
 
 #include "entity.hpp"
 
@@ -11,9 +13,9 @@
 const Vec2 CHUNK_SIZE(1, 4);
 
 
-typedef std::vector<std::shared_ptr<Entity>>                    EntityVec;
-typedef std::map<EntityTag, EntityVec>                          EntityMap;
-typedef std::map<EntityTag, std::map<std::string, EntityVec>>   ChunkMap;
+typedef std::vector<std::shared_ptr<Entity>>                                        EntityVec;
+typedef std::unordered_map<EntityTag, EntityVec>                                    EntityMap;
+typedef std::unordered_map<EntityTag, std::unordered_map<std::string, EntityVec>>   ChunkMap;
 
 
 class EntityManager

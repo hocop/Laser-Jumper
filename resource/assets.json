@@ -1,0 +1,11 @@
+[
+    {"type": "texture", "key": "laserBeam",         "path": "resource/textures/laser_beam.png"},
+    {"type": "texture", "key": "explosion",         "path": "resource/textures/explosion.png"},
+    {"type": "texture", "key": "reactor",           "path": "resource/textures/reactor.png"},
+    {"type": "texture", "key": "reactorOnPlayer",   "path": "resource/textures/reactor_on_player.png"},
+    {"type": "texture", "key": "finish",            "path": "resource/textures/finish.png"},
+
+    {"type": "font",    "key": "regular",           "path": "resource/fonts/ChildSPlay-Regular.otf"},
+
+    {"type": "shader",  "key": "blinking",          "path": "resource/shaders/blinking.frag"}
+]

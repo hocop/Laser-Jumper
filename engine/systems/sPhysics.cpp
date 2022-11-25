@@ -30,6 +30,10 @@ Derivatives computeDerivatives(const std::shared_ptr<Entity>& entity, const Stat
     if (entity->cGravity)
         drvs.acc.y += entity->cGravity->g;
 
+    // Reactor acceleration
+    if (entity->cReactor)
+        drvs.acc += entity->cReactor->force;
+
     // Laser spring
     if (entity->cLaser)
     {
@@ -56,12 +60,6 @@ Derivatives computeDerivatives(const std::shared_ptr<Entity>& entity, const Stat
             // Add forces
             drvs.acc.x += -laserF * tan + fricF / cos;
             drvs.acc.y += laserF;
-            
-            // Reactor force
-            if (entity->cReactor)
-            {
-                drvs.acc += entity->cReactor->force;
-            }
         }
     }
 
@@ -110,57 +108,53 @@ State changeState(const std::shared_ptr<Entity>& entity, const State& state, con
 
 void GameEngine::sPhysics()
 {
-    double deltaT = DELTA_T_us * 0.000001;
-    double deltaTSqhalf = 0.5 * deltaT * deltaT;
+    double deltaTSqhalf = 0.5 * m_deltaT * m_deltaT;
 
-    // Move objects
-    for (auto entity : m_entities.getEntities())
+    if (!m_paused)
     {
-        if (entity->cPosition && entity->cVelocity)
+        // Move objects
+        for (auto entity : m_entities.getEntities())
         {
-            auto state = getState(entity);
-            auto drvs = computeDerivatives(entity, state);
-            auto newState = changeState(entity, state, drvs, deltaT);
+            if (entity->cPosition && entity->cVelocity)
+            {
+                auto state = getState(entity);
+                auto drvs = computeDerivatives(entity, state);
+                auto newState = changeState(entity, state, drvs, m_deltaT);
 
-            entity->cPosition->vec += newState.vel * deltaT + drvs.acc * deltaTSqhalf;
-            entity->cVelocity->vec = newState.vel;
-            entity->cLaser->slip = newState.slip;
+                entity->cPosition->vec += newState.vel * m_deltaT + drvs.acc * deltaTSqhalf;
+                entity->cVelocity->vec = newState.vel;
+                entity->cLaser->slip = newState.slip;
+            }
         }
     }
 
-    // Move camera to the player
-    auto cameras = m_entities.getEntities(TAG_CAMERA);
-    auto players = m_entities.getEntities(TAG_PLAYER);
-    if(cameras.size() > 0)
+    // Move camera to its target
+    Vec2& origin = m_camera->cPosition->vec;
+    if(m_camera->cCamera->target)
     {
-        auto camera = cameras[0];
-        if(camera->cCamera->type == CAMERA_FOCUS_PLAYER && players.size() > 0)
-        {
-            float aspect = float(m_window.getSize().y) / float(m_window.getSize().x);
-            auto player = players[players.size() - 1];
-            const Vec2& pos = player->cPosition->vec;
-            const Vec2& vel = player->cVelocity->vec;
-            // Modify camera scale
-            double tgtScale = mapRange(std::abs(vel.x), 0, 20, 20, 20);
-            if (camera->cCamera->scale < 0)
-                camera->cCamera->scale = tgtScale;
-            else
-                camera->cCamera->scale += deltaT * camera->cCamera->gamma * (tgtScale - camera->cCamera->scale);
-            float width = camera->cCamera->scale;
-            float height = width * aspect;
-            // Move camera in front of player
-            double tgtXShift = mapRange(vel.x, -10, 10, -2, 2);
-            camera->cCamera->xShift += deltaT * camera->cCamera->gamma * (tgtXShift - camera->cCamera->xShift);
-            Vec2& origin = camera->cPosition->vec;
-            origin.x = pos.x + camera->cCamera->xShift;
-            if (pos.y > origin.y + camera->cCamera->yWall)
-                origin.y = pos.y - camera->cCamera->yWall;
-            else if (pos.y < origin.y - camera->cCamera->yWall)
-                origin.y = pos.y + camera->cCamera->yWall;
-            else
-                origin.y += camera->cCamera->yGamma * (pos.y - origin.y);
-
-            camera->cCamera->view.reset(sf::FloatRect(origin.x - width * 0.5, origin.y - height * 0.5, width, height));
-        }
+        auto target = m_camera->cCamera->target;
+        const Vec2& pos = target->cPosition->vec;
+        const Vec2& vel = target->cVelocity->vec;
+        // Modify camera scale
+        double tgtScale = mapRange(std::abs(vel.x), 0, 2, 16, 20);
+        if (m_camera->cCamera->scale < 0)
+            m_camera->cCamera->scale = tgtScale;
+        else
+            m_camera->cCamera->scale += m_deltaT * m_camera->cCamera->gamma * (tgtScale - m_camera->cCamera->scale);
+        // Move camera in front of player
+        double tgtXShift = mapRange(vel.x, -10, 10, -2, 2);
+        m_camera->cCamera->xShift += m_deltaT * m_camera->cCamera->gamma * (tgtXShift - m_camera->cCamera->xShift);
+        origin.x = pos.x + m_camera->cCamera->xShift;
+        if (pos.y > origin.y + m_camera->cCamera->yWall)
+            origin.y = pos.y - m_camera->cCamera->yWall;
+        else if (pos.y < origin.y - m_camera->cCamera->yWall)
+            origin.y = pos.y + m_camera->cCamera->yWall;
+        else
+            origin.y += m_camera->cCamera->yGamma * (pos.y - origin.y);
     }
+    float aspect = float(m_window.getSize().y) / float(m_window.getSize().x);
+    float width = m_camera->cCamera->scale;
+    float height = width * aspect;
+
+    m_camera->cCamera->view.reset(sf::FloatRect(origin.x - width * 0.5, origin.y - height * 0.5, width, height));
 }

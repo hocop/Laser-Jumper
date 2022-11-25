@@ -15,6 +15,7 @@ enum EntityTag
     TAG_BLOCK,
     TAG_EFFECT,
     TAG_BUTTON,
+    TAG_HUD,
     TAG_CAMERA
 };
 
@@ -39,13 +40,19 @@ public:
     std::shared_ptr<CRectShape>     cRectShape;
     std::shared_ptr<CLineShape>     cLineShape;
     // Other
+    std::shared_ptr<CEffect>        cEffect;
+    // Player
     std::shared_ptr<CControls>      cControls;
     std::shared_ptr<CLaser>         cLaser;
-    std::shared_ptr<CEffect>        cEffect;
-    // Effects on player
     std::shared_ptr<CReactor>       cReactor;
+    std::shared_ptr<CTimer>         cTimer;
+    // Graphical
+    std::shared_ptr<CSprite>        cSprite;
+    std::shared_ptr<CShader>        cShader;
     // Camera
     std::shared_ptr<CCamera>        cCamera;
+    // Hud
+    std::shared_ptr<CHudTimer>      cHudTimer;
 
 
     EntityTag const& tag() {return m_tag;};

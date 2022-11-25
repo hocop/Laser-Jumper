@@ -16,7 +16,7 @@ void detectCircleAndBoxCollision(const std::shared_ptr<Entity>& circle, const st
     // Get box params
     auto size = box->cRectShape->rect.getSize();
     double wHalf = size.x / 2, hHalf = size.y / 2;
-    double angle = box->cRectShape->rect.getRotation() / 180 * M_PI;
+    double angle = box->cPosition->rotation;
     // Compute circle relative position
     Vec2 relpos = circle->cPosition->vec - box->cPosition->vec;
     relpos = relpos.rotate(-angle);
@@ -93,7 +93,7 @@ void detectCircleAndLineCollision(const std::shared_ptr<Entity>& circle, const s
     double r2 = circle->cCircleShape->radiusSquared;
     // Get line params
     double lHalf = line->cLineShape->length * 0.5;
-    double angle = line->cLineShape->angle;
+    double angle = line->cPosition->rotation;
     // Compute circle relative position
     Vec2 relpos = circle->cPosition->vec - line->cPosition->vec;
     relpos = relpos.rotate(-angle);
@@ -152,7 +152,7 @@ void detectLaserAndLineCollision(const std::shared_ptr<Entity>& player, const st
     // Compute player relative position
     Vec2 relpos = player->cPosition->vec - line->cPosition->vec;
     // Get line params
-    const double& angle = line->cLineShape->angle;
+    const double& angle = line->cPosition->rotation;
     double l = line->cLineShape->length * std::cos(angle);
     double lHalf = l * 0.5;
     double coefRight = relpos.x / l + 0.5;
@@ -166,6 +166,24 @@ void detectLaserAndLineCollision(const std::shared_ptr<Entity>& player, const st
             player->cLaser->length = l;
             player->cLaser->attackAngle = angleInterp;
         }
+    }
+}
+
+// Apply effect to player
+void GameEngine::applyEffect(std::shared_ptr<Entity>& effect, std::shared_ptr<Entity>& player)
+{
+    switch (effect->cEffect->type)
+    {
+    case EFFECT_FINISH:
+        if (player->cTimer)
+            player->cTimer->running = false;
+            m_camera->cCamera->target.reset();
+        break;
+    case EFFECT_REACTOR:
+        player->cReactor = std::make_shared<CReactor>(Vec2(10, 0), 0.5, m_assets.getTexture("reactorOnPlayer"));
+        player->cReactor->force = player->cReactor->force.rotate(effect->cPosition->rotation);
+        player->cReactor->sprite.setRotation(effect->cPosition->rotation * 180 / M_PI);
+        break;
     }
 }
 
@@ -186,17 +204,16 @@ void GameEngine::processCollisions(std::shared_ptr<Entity>& player, std::shared_
         // Resolve collision
         if (collision.distance > 0)
         {
+            // Push player from the obstacle
             if (entity->cCollision->physical)
             {
                 player->cPosition->vec += collision.normal * collision.distance;
                 Vec2& pvel = player->cVelocity->vec;
                 pvel += collision.normal * (std::max(-(pvel * collision.normal), 0.0) * (1.0 + std::sqrt(entity->cCollision->bounciness)));
             }
+            // Apply effect
             if (entity->cEffect)
-            {
-                if (entity->cEffect->type == EFFECT_REACTOR_R)
-                    player->cReactor = std::make_shared<CReactor>(Vec2(10, 0), 0.5, m_reactorROnPlayerTexture);
-            }
+                applyEffect(entity, player);
         }
     }
 }

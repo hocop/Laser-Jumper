@@ -17,70 +17,81 @@ void GameEngine::sUserInput()
             if (event.mouseButton.button == sf::Mouse::Left)
             {
                 // Get click position and spawn player
-                auto cameras = m_entities.getEntities(TAG_CAMERA);
-                if(cameras.size() > 0)
-                {
-                    auto winSz = m_window.getSize();
-                    sf::Vector2f clickPos(event.mouseButton.x / float(winSz.x) * 2 - 1, 1 - event.mouseButton.y / float(winSz.y) * 2);
-                    const sf::Transform& tr = cameras[0]->cCamera->view.getInverseTransform();
-                    clickPos = tr.transformPoint(clickPos);
-                    // Spawn player
-                    spawnPlayer(clickPos);
-                }
+                Vec2 clickPos = screenToWorld(Vec2(event.mouseButton.x, event.mouseButton.y));
+                spawnPlayer(clickPos);
             }
         }
 
         // Key pressed
-        if (event.type == sf::Event::KeyPressed)
+        if (event.type == sf::Event::KeyPressed || event.type == sf::Event::KeyReleased)
         {
-            if (event.key.code == sf::Keyboard::Q)
+            // Find this key in the keymap
+            if (m_actionMap.find(event.key.code) != m_actionMap.end())
             {
-                m_running = false;
-            }
-            if (event.key.code == sf::Keyboard::X)
-            {
-                spawnPlayer(Vec2(300, 300));
-            }
-            if (event.key.code == sf::Keyboard::Y)
-            {
-                // Delete last player
-                EntityVec& players = m_entities.getEntities(TAG_PLAYER);
-                if(players.size() > 0)
-                    players[players.size() - 1]->destroy();
-            }
-            if (event.key.code == sf::Keyboard::Space)
-            {
-                // Control last player
-                EntityVec& players = m_entities.getEntities(TAG_PLAYER);
-                if(players.size() > 0)
-                {
-                    players[players.size() - 1]->cLaser->lengthTgt = players[players.size() - 1]->cLaser->lengthActive;
-                }
-            }
-            if (event.key.code == sf::Keyboard::Enter)
-            {
-                // Reset position
-                EntityVec& players = m_entities.getEntities(TAG_PLAYER);
-                if(players.size() > 0)
-                {
-                    players[players.size() - 1]->cPosition->vec = Vec2(0, -1);
-                    players[players.size() - 1]->cVelocity->vec = Vec2(0, 0);
-                }
-            }
-        }
+                // Determine action type
+                const std::string type = (event.type == sf::Event::KeyPressed) ? "start" : "end";
 
-        // Key released
-        if (event.type == sf::Event::KeyReleased)
-        {
-            if (event.key.code == sf::Keyboard::Space)
-            {
-                // Control last player
-                EntityVec& players = m_entities.getEntities(TAG_PLAYER);
-                if(players.size() > 0)
-                {
-                    players[players.size() - 1]->cLaser->lengthTgt = players[players.size() - 1]->cLaser->lengthNeutral;
-                }
+                // Send action to the scene
+                sDoAction(Action(m_actionMap[event.key.code], type));
             }
         }
     }
+}
+
+
+void GameEngine::registerAction(const int& key, const std::string& actionName)
+{
+    m_actionMap[key] = actionName;
+}
+
+
+void GameEngine::sDoAction(const Action& action)
+{
+    if (action.name() == "exit" && action.type() == "start")
+        m_running = false;
+    
+    if (action.name() == "pause" && action.type() == "start")
+        m_paused = !m_paused;
+    
+    if (action.name() == "restart" && action.type() == "start")
+    {
+        EntityVec& players = m_entities.getEntities(TAG_PLAYER);
+        if(players.size() > 0)
+            players[players.size() - 1]->destroy();
+        spawnPlayer(Vec2(0, -1));
+    }
+
+    if (action.name() == "deleteLast" && action.type() == "start")
+    {
+        EntityVec& players = m_entities.getEntities(TAG_PLAYER);
+        if(players.size() > 0)
+            players[players.size() - 1]->destroy();
+    }
+
+    if (action.name() == "jump")
+        if(m_player)
+            if (action.type() == "start")
+                m_player->cLaser->lengthTgt = m_player->cLaser->lengthActive;
+            else
+                m_player->cLaser->lengthTgt = m_player->cLaser->lengthNeutral;
+}
+
+
+Vec2 GameEngine::screenToWorld(const Vec2& pos)
+{
+    auto winSz = m_window.getSize();
+    sf::Vector2f screenPos(pos.x / float(winSz.x) * 2 - 1, 1 - pos.y / float(winSz.y) * 2);
+    const sf::Transform& tr = m_camera->cCamera->view.getInverseTransform();
+    return tr.transformPoint(screenPos);
+}
+
+Vec2 GameEngine::worldToScreen(const Vec2& pos)
+{
+    auto winSz = m_window.getSize();
+    const sf::Transform& tr = m_camera->cCamera->view.getTransform();
+    sf::Vector2f screenPos = tr.transformPoint(pos.as_sf());
+    return Vec2(
+        (screenPos.x + 1) * float(winSz.x) * 0.5,
+        (1 + screenPos.y) * float(winSz.y) * 0.5
+    );
 }

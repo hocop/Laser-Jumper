@@ -8,11 +8,13 @@ int main(int argc, char *argv[])
 {
     GameEngine game;
 
-    game.loadMap("resource/tracks/deadly/level3.json");
-
-    game.spawnPlayer(Vec2(0, -1));
+    game.loadMap("resource/tracks/hard/level3.json");
 
     game.spawnCamera(CAMERA_FOCUS_PLAYER);
+
+    game.spawnHud();
+
+    game.spawnPlayer(Vec2(0, -1));
 
     game.run();
 }

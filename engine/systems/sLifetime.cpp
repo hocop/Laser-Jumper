@@ -2,16 +2,22 @@
 
 void GameEngine::sLifetime()
 {
-    double deltaT = DELTA_T_us * 0.000001;
-
-    // Effects lifetime
-    for (auto player : m_entities.getEntities(TAG_PLAYER))
+    if (!m_paused)
     {
-        if (player->cReactor)
+        m_time += m_deltaT;
+
+        // Effects lifetime
+        for (auto player : m_entities.getEntities(TAG_PLAYER))
         {
-            player->cReactor->time -= deltaT;
-            if (player->cReactor->time < 0)
-                player->cReactor.reset();
+            if (player->cReactor)
+            {
+                player->cReactor->time -= m_deltaT;
+                if (player->cReactor->time < 0)
+                    player->cReactor.reset();
+            }
+            if (player->cTimer)
+                if (player->cTimer->running)
+                    player->cTimer->timer += m_deltaT;
         }
     }
 }
