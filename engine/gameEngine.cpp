@@ -12,27 +12,17 @@ void GameEngine::run()
         // Process user input
         sUserInput();
 
-        // Add and delete entities
-        m_entities.update();
-        
-        // Detect and process all collisions
-        sCollision();
+        currentScene()->update();
 
         // Render every so often
         if (stepsCount % STEPS_PER_FRAME == 0)
         {
-            sRender();
+            currentScene()->sRender();
 
             auto elapsed = std::chrono::high_resolution_clock::now() - start;
             usleep(std::max(DELTA_T_us * STEPS_PER_FRAME - std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count(), long(0)));
             start = std::chrono::high_resolution_clock::now();
         }
-
-        // Physics step
-        sPhysics();
-
-        // Process temporary things such as effects
-        sLifetime();
 
         stepsCount++;
     }
@@ -53,20 +43,43 @@ GameEngine::GameEngine()
 
     // Load assets
     m_assets.load("resource/assets.json");
-
-    // Init constants
-    m_deltaT = DELTA_T_us * 0.000001;
-
-    // Register actions TODO: move to scene class
-    registerAction(sf::Keyboard::Space,     "jump");
-    registerAction(sf::Keyboard::Enter,     "restart");
-    registerAction(sf::Keyboard::P,         "pause");
-    registerAction(sf::Keyboard::Q,         "exit");
-    registerAction(sf::Keyboard::Y,         "deleteLast");
 }
 
 GameEngine::~GameEngine()
 {
     // Close window
     m_window.close();
+}
+
+
+void GameEngine::changeScene(const std::string newSceneName)
+{
+    m_currentScene = newSceneName;
+}
+
+void GameEngine::changeScene(const std::string newSceneName, std::shared_ptr<Scene> scene)
+{
+    m_currentScene = newSceneName;
+    m_scenes[m_currentScene] = scene;
+}
+
+void GameEngine::quit()
+{
+    m_running = false;
+}
+
+
+std::shared_ptr<Scene> GameEngine::currentScene()
+{
+    return m_scenes[m_currentScene];
+}
+
+Assets& GameEngine::assets()
+{
+    return m_assets;
+}
+
+sf::RenderWindow& GameEngine::window()
+{
+    return m_window;
 }

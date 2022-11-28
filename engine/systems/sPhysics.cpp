@@ -1,4 +1,5 @@
-#include "../gameEngine.hpp"
+#include "../scenes/level.hpp"
+
 
 double mapRange(double x, double xFrom, double xTo, double yFrom, double yTo)
 {
@@ -106,7 +107,7 @@ State changeState(const std::shared_ptr<Entity>& entity, const State& state, con
 }
 
 
-void GameEngine::sPhysics()
+void Level::sPhysics()
 {
     double deltaTSqhalf = 0.5 * m_deltaT * m_deltaT;
 
@@ -152,7 +153,7 @@ void GameEngine::sPhysics()
         else
             origin.y += m_camera->cCamera->yGamma * (pos.y - origin.y);
     }
-    float aspect = float(m_window.getSize().y) / float(m_window.getSize().x);
+    float aspect = float(m_gameEngine->window().getSize().y) / float(m_gameEngine->window().getSize().x);
     float width = m_camera->cCamera->scale;
     float height = width * aspect;
 
