@@ -14,7 +14,8 @@ Level::Level(GameEngine& gameEngine)
     registerAction(sf::Keyboard::Enter,     "restart");
     registerAction(sf::Keyboard::P,         "pause");
     registerAction(sf::Keyboard::Q,         "exit");
-    registerAction(sf::Keyboard::Y,         "deleteLast");
+    registerAction(sf::Keyboard::Y,         "delete_last");
+    registerAction(sf::Keyboard::C,         "change_level");
 }
 
 

@@ -33,6 +33,7 @@ protected:
     ActionMap       m_actionMap;
 
 public:
+    Scene() {};
     Scene(GameEngine& gameEngine);
     ~Scene() {};
 

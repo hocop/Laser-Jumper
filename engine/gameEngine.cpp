@@ -74,6 +74,11 @@ std::shared_ptr<Scene> GameEngine::currentScene()
     return m_scenes[m_currentScene];
 }
 
+std::string GameEngine::currentSceneName()
+{
+    return m_currentScene;
+}
+
 Assets& GameEngine::assets()
 {
     return m_assets;

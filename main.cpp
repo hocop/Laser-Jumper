@@ -9,13 +9,19 @@ int main(int argc, char *argv[])
 {
     GameEngine game;
 
-    Level level(game);
-    level.loadMap("resource/tracks/hard/level3.json");
-    level.spawnCamera(CAMERA_FOCUS_PLAYER);
-    level.spawnHud();
-    level.spawnPlayer(Vec2(0, -1));
+    Level levelHard(game);
+    levelHard.loadMap("resource/tracks/hard/level3.json");
+    levelHard.spawnCamera(CAMERA_FOCUS_PLAYER);
+    levelHard.spawnHud();
+    levelHard.spawnPlayer(Vec2(0, -1));
+    game.changeScene("hard", std::make_shared<Level>(levelHard));
 
-    game.changeScene("level", std::make_shared<Level>(level));
+    Level levelDeadly(game);
+    levelDeadly.loadMap("resource/tracks/deadly/level2.json");
+    levelDeadly.spawnCamera(CAMERA_FOCUS_PLAYER);
+    levelDeadly.spawnHud();
+    levelDeadly.spawnPlayer(Vec2(0, -1));
+    game.changeScene("deadly", std::make_shared<Level>(levelDeadly));
 
     game.run();
 }

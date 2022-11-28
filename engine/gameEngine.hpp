@@ -27,6 +27,7 @@ public:
     void quit();
 
     std::shared_ptr<Scene> currentScene();
+    std::string currentSceneName();
     Assets& assets();
     sf::RenderWindow& window();
 

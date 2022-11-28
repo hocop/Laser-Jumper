@@ -9,6 +9,14 @@ void Level::sDoAction(const Action& action)
     if (action.name() == "pause" && action.type() == "start")
         m_paused = !m_paused;
     
+    if (action.name() == "change_level" && action.type() == "start")
+    {
+        if (m_gameEngine->currentSceneName() == "hard")
+            m_gameEngine->changeScene("deadly");
+        else
+            m_gameEngine->changeScene("hard");
+    }
+
     if (action.name() == "restart" && action.type() == "start")
     {
         EntityVec& players = m_entities.getEntities(TAG_PLAYER);
@@ -17,7 +25,7 @@ void Level::sDoAction(const Action& action)
         spawnPlayer(Vec2(0, -1));
     }
 
-    if (action.name() == "deleteLast" && action.type() == "start")
+    if (action.name() == "delete_last" && action.type() == "start")
     {
         EntityVec& players = m_entities.getEntities(TAG_PLAYER);
         if(players.size() > 0)
