@@ -19,12 +19,8 @@ Level::Level(GameEngine& gameEngine)
     registerAction(sf::Keyboard::C,         "change_level");
 
     // Add buttons
-    spawnButtonRect("X", "exit", Vec2(1200, 25),    Vec2(80, 50));
-    spawnButtonRect("R", "restart", Vec2(500, 25),     Vec2(80, 50));
-
-    // Add timer
-    m_timer = m_entities.addEntity(TAG_HUD);
-    m_timer->cText = std::make_shared<CText>(m_gameEngine->assets().getFont("regular"));
+    spawnButtonRect("X", "exit",    Vec2(.9, .001),    Vec2(.1, .1));
+    spawnButtonRect("R", "restart", Vec2(.4, .001),     Vec2(.1, .1));
 }
 
 
@@ -46,10 +42,15 @@ void Level::update()
 
 void Level::reset()
 {
+    // Remove all players
     EntityVec& players = m_entities.getEntities(TAG_PLAYER);
     for (int i = 0; i < players.size(); i++)
         players[i]->destroy();
+
+    // Start new run
+    spawnTimer();
     spawnPlayer(Vec2(0, -1));
+    spawnCountdown();
 }
 
 
@@ -81,13 +82,19 @@ void Level::sDoAction(const Action& action)
             players[players.size() - 1]->destroy();
     }
 
-    if (action.name() == "jump")
+    if (action.name() == "jump" && running())
         if(m_player)
             if (action.type() == "start")
                 m_player->cLaser->lengthTgt = m_player->cLaser->lengthActive;
             else
                 m_player->cLaser->lengthTgt = m_player->cLaser->lengthNeutral;
 }
+
+
+bool Level::running()
+{
+    return !m_paused && !m_countdown;
+};
 
 
 Vec2 Level::screenToWorld(const Vec2& pos)

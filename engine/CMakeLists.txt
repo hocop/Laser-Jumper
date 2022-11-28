@@ -12,8 +12,11 @@ add_library(
     utils/vec2.cpp
     utils/keycodes.cpp
 
-    systems/factory.cpp
-    systems/factoryButtons.cpp
+    factory/moving.cpp
+    factory/stationary.cpp
+    factory/buttons.cpp
+    factory/hud.cpp
+
     systems/sCollision.cpp
     systems/sLifetime.cpp
     systems/sPhysics.cpp

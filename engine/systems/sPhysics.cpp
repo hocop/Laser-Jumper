@@ -112,7 +112,7 @@ void Level::sPhysics()
 {
     double deltaTSqhalf = 0.5 * m_deltaT * m_deltaT;
 
-    if (!m_paused)
+    if (running())
     {
         // Move objects
         for (auto entity : m_entities.getEntities())

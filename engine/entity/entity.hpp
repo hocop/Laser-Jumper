@@ -53,6 +53,7 @@ public:
     // Hud
     std::shared_ptr<CText>          cText;
     std::shared_ptr<CButton>        cButton;
+    std::shared_ptr<CCountdown>     cCountdown;
 
 
     EntityTag const& tag() {return m_tag;};

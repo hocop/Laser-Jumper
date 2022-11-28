@@ -104,6 +104,12 @@ void drawEntity(sf::RenderWindow& window, const std::shared_ptr<Entity> &entity)
 
 void resetGeometryPosition(std::shared_ptr<Entity> &entity)
 {
+    if (!entity->cPosition)
+    {
+        std::cout << "Warning: resetting position without position\n";
+        return;
+    }
+
     if (entity->cCircleShape)
         entity->cCircleShape->circle.setPosition(entity->cPosition->vec.as_sf());
 

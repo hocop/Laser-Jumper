@@ -1,8 +1,5 @@
 #pragma once
 
-#include "../utils/vec2.hpp"
-#include <SFML/Graphics.hpp>
-
 
 enum EffectType
 {

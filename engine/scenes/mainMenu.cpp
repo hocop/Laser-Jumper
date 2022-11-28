@@ -9,11 +9,12 @@ MainMenu::MainMenu(GameEngine& gameEngine)
 
     // Register actions
     registerAction(sf::Keyboard::Q,         "exit");
+    registerAction(sf::Keyboard::Space,     "play_hard");
 
     // Add buttons
-    spawnButtonRect("Play hard level",      "play_hard",    Vec2(200, 200),    Vec2(300, 50));
-    spawnButtonRect("Play deadly level",    "play_deadly",  Vec2(200, 300),    Vec2(300, 50));
-    spawnButtonRect("Exit",                 "exit",         Vec2(200, 400),    Vec2(300, 50));
+    spawnButtonRect("Play hard level",      "play_hard",    Vec2(0.1, 0.2),    Vec2(0.4, 0.1));
+    spawnButtonRect("Play deadly level",    "play_deadly",  Vec2(0.1, 0.4),    Vec2(0.4, 0.1));
+    spawnButtonRect("Exit",                 "exit",         Vec2(0.1, 0.6),    Vec2(0.4, 0.1));
 }
 
 

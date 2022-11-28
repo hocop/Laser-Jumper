@@ -16,5 +16,5 @@ Run:
 View dependency graph:
 
 ```
-python dependency_graph.py -v --ignore ./extensions . graph
+python dependency_graph.py -v --ignore ./extensions,./build . graph
 ```

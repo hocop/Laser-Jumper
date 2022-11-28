@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../utils/vec2.hpp"
 #include <SFML/Graphics.hpp>
 
 
@@ -28,4 +27,13 @@ struct CText
         text.setFillColor(sf::Color::White);
     };
     ~CText() {};
+};
+
+
+struct CCountdown
+{
+    double time = 1.0;
+
+    CCountdown() {};
+    ~CCountdown() {};
 };

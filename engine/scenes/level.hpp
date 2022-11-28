@@ -15,6 +15,7 @@ private:
     std::shared_ptr<Entity> m_camera;
     std::shared_ptr<Entity> m_player;
     std::shared_ptr<Entity> m_timer;
+    std::shared_ptr<Entity> m_countdown;
 
 public:
     Level(GameEngine& gameEngine);
@@ -25,8 +26,12 @@ public:
     void sRender();
     void reset();
 
+    bool running();
+
     std::shared_ptr<Entity> spawnPlayer(const Vec2& pos);
-    void                    spawnCamera(const CameraType& focus);
+    std::shared_ptr<Entity> spawnCamera(const CameraType& focus);
+    std::shared_ptr<Entity> spawnTimer();
+    std::shared_ptr<Entity> spawnCountdown();
     std::shared_ptr<Entity> spawnRect(const Vec2& pos, double width, double height, float angle=0);
     std::shared_ptr<Entity> spawnLine(const Vec2& pos, double length, float angle=0, bool doubleSided=true);
     std::shared_ptr<Entity> spawnEffect(const Vec2& pos, const EffectType& type, const double& angle=0);
