@@ -40,6 +40,7 @@ public:
     virtual void update() = 0;
     virtual void sDoAction(const Action& action) = 0;
     virtual void sRender() = 0;
+    virtual void reset() = 0;
 
     void registerAction(const int& key, const std::string& actionName)
     {
@@ -49,9 +50,10 @@ public:
     ActionMap& actionMap() {return m_actionMap;};
     const EntityVec& getHud() {return m_entities.getEntities(TAG_HUD);};
 
-    void spawnButtonRect(const std::string& action, const std::string& text, const Vec2& pos, const Vec2& size);
+    void spawnButtonRect(const std::string& text, const std::string& action, const Vec2& pos, const Vec2& size);
 };
 
 
 void drawEntity(sf::RenderWindow& window, const std::shared_ptr<Entity> &entity);
 void drawHud(sf::RenderWindow& window, const std::shared_ptr<Entity> &entity);
+void resetGeometryPosition(std::shared_ptr<Entity> &entity);

@@ -1,4 +1,19 @@
 #include "../scenes/level.hpp"
+#include "../scenes/mainMenu.hpp"
+#include "../gameEngine.hpp"
+
+
+void MainMenu::sRender()
+{
+    auto& window = m_gameEngine->window();
+    window.clear(sf::Color(33, 43, 18));
+
+    // Draw HUD
+    for (auto entity : m_entities.getEntities(TAG_HUD))
+        drawEntity(window, entity);
+
+    window.display();
+}
 
 
 void Level::sRender()
@@ -6,10 +21,10 @@ void Level::sRender()
     auto& players = m_entities.getEntities(TAG_PLAYER);
 
     auto& window = m_gameEngine->window();
+    window.clear(sf::Color(18, 33, 43));
 
     // Set view from camera
     window.setView(m_camera->cCamera->view);
-    window.clear(sf::Color(18, 33, 43));
 
     // Shaders' variables
     for (auto& [key, shader] : m_gameEngine->assets().getShaders())

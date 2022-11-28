@@ -6,14 +6,15 @@ add_library(
     gameEngine.cpp
 
     scenes/level.cpp
+    scenes/mainMenu.cpp
 
     utils/assets.cpp
     utils/vec2.cpp
     utils/keycodes.cpp
 
     systems/factory.cpp
+    systems/factoryButtons.cpp
     systems/sCollision.cpp
-    systems/sDoAction.cpp
     systems/sLifetime.cpp
     systems/sPhysics.cpp
     systems/sRender.cpp

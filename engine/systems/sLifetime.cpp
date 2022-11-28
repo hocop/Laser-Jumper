@@ -1,4 +1,6 @@
 #include "../scenes/level.hpp"
+#include "../gameEngine.hpp"
+
 
 void Level::sLifetime()
 {

@@ -1,4 +1,5 @@
 #include "../scenes/level.hpp"
+#include "../gameEngine.hpp"
 
 
 double mapRange(double x, double xFrom, double xTo, double yFrom, double yTo)

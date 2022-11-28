@@ -1,7 +1,6 @@
 #pragma once
 
 #include "scene.hpp"
-#include "../gameEngine.hpp"
 
 const double CONTACT_EPS = 0.001;
 
@@ -24,6 +23,7 @@ public:
     void update();
     void sDoAction(const Action& anction);
     void sRender();
+    void reset();
 
     std::shared_ptr<Entity> spawnPlayer(const Vec2& pos);
     void                    spawnCamera(const CameraType& focus);
@@ -43,5 +43,3 @@ public:
     Vec2 screenToWorld(const Vec2& pos);
     Vec2 worldToScreen(const Vec2& pos);
 };
-
-void resetGeometryPosition(std::shared_ptr<Entity> &entity);

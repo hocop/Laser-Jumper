@@ -3,22 +3,24 @@
 
 #include "engine/gameEngine.hpp"
 #include "engine/scenes/level.hpp"
+#include "engine/scenes/mainMenu.hpp"
 
 
 int main(int argc, char *argv[])
 {
     GameEngine game;
 
+    MainMenu mainMenu(game);
+    game.addScene("main_menu", std::make_shared<MainMenu>(mainMenu));
+
     Level levelHard(game);
     levelHard.loadMap("resource/tracks/hard/level3.json");
     levelHard.spawnCamera(CAMERA_FOCUS_PLAYER);
-    levelHard.spawnPlayer(Vec2(0, -1));
     game.addScene("hard", std::make_shared<Level>(levelHard));
 
     Level levelDeadly(game);
     levelDeadly.loadMap("resource/tracks/deadly/level2.json");
     levelDeadly.spawnCamera(CAMERA_FOCUS_PLAYER);
-    levelDeadly.spawnPlayer(Vec2(0, -1));
     game.addScene("deadly", std::make_shared<Level>(levelDeadly));
 
     // std::cout << game.currentSceneName() << std::endl;
