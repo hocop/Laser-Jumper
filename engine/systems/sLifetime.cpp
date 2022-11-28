@@ -1,6 +1,6 @@
-#include "../gameEngine.hpp"
+#include "../scenes/level.hpp"
 
-void GameEngine::sLifetime()
+void Level::sLifetime()
 {
     if (!m_paused)
     {

@@ -1,7 +1,7 @@
-#include "../gameEngine.hpp"
+#include "../scenes/level.hpp"
 
 
-void GameEngine::loadMap(const std::string& path)
+void Level::loadMap(const std::string& path)
 {
     std::ifstream f(path);
     json map = json::parse(f);
@@ -47,7 +47,7 @@ void GameEngine::loadMap(const std::string& path)
 }
 
 
-std::shared_ptr<Entity> GameEngine::spawnPlayer(const Vec2& pos)
+std::shared_ptr<Entity> Level::spawnPlayer(const Vec2& pos)
 {
     // Create player
     m_player = m_entities.addEntity(TAG_PLAYER);
@@ -56,7 +56,7 @@ std::shared_ptr<Entity> GameEngine::spawnPlayer(const Vec2& pos)
     m_player->cCollision = std::make_shared<CCollision>();
     m_player->cGravity = std::make_shared<CGravity>();
 
-    m_player->cShader = std::make_shared<CShader>(m_assets.getShader("blinking"));
+    m_player->cShader = std::make_shared<CShader>(m_gameEngine->assets().getShader("blinking"));
 
     m_player->cTimer = std::make_shared<CTimer>();
 
@@ -74,8 +74,8 @@ std::shared_ptr<Entity> GameEngine::spawnPlayer(const Vec2& pos)
             1,
             0.03,
             0.1,
-            m_assets.getTexture("laserBeam"),
-            m_assets.getTexture("explosion")
+            m_gameEngine->assets().getTexture("laserBeam"),
+            m_gameEngine->assets().getTexture("explosion")
         )
     );
 
@@ -93,7 +93,7 @@ std::shared_ptr<Entity> GameEngine::spawnPlayer(const Vec2& pos)
 }
 
 
-std::shared_ptr<Entity> GameEngine::spawnLine(const Vec2& pos, double length, float angle, bool doubleSided)
+std::shared_ptr<Entity> Level::spawnLine(const Vec2& pos, double length, float angle, bool doubleSided)
 {
     std::shared_ptr<Entity> block = m_entities.addEntity(TAG_BLOCK);
     block->cPosition = std::make_shared<CPosition>(pos);
@@ -113,7 +113,7 @@ std::shared_ptr<Entity> GameEngine::spawnLine(const Vec2& pos, double length, fl
 }
 
 
-std::shared_ptr<Entity> GameEngine::spawnRect(const Vec2& pos, double width, double height, float angle)
+std::shared_ptr<Entity> Level::spawnRect(const Vec2& pos, double width, double height, float angle)
 {
     std::shared_ptr<Entity> block = m_entities.addEntity(TAG_BLOCK);
     block->cPosition = std::make_shared<CPosition>(pos);
@@ -133,7 +133,7 @@ std::shared_ptr<Entity> GameEngine::spawnRect(const Vec2& pos, double width, dou
 }
 
 
-void GameEngine::spawnCamera(const CameraType& focus)
+void Level::spawnCamera(const CameraType& focus)
 {
     m_camera = m_entities.addEntity(TAG_CAMERA);
     m_camera->cCamera = std::make_shared<CCamera>();
@@ -142,36 +142,39 @@ void GameEngine::spawnCamera(const CameraType& focus)
 }
 
 
-void GameEngine::spawnHud()
+void Level::spawnHud()
 {
     m_timer = m_entities.addEntity(TAG_HUD);
-    m_timer->cHudTimer = std::make_shared<CHudTimer>(m_assets.getFont("regular"));
+    m_timer->cHudTimer = std::make_shared<CHudTimer>(m_gameEngine->assets().getFont("regular"));
 }
 
 
-std::shared_ptr<Entity> GameEngine::spawnEffect(const Vec2& pos, const EffectType& type, const double& angle)
+std::shared_ptr<Entity> Level::spawnEffect(const Vec2& pos, const EffectType& type, const double& angle)
 {
     std::shared_ptr<Entity> effect = m_entities.addEntity(TAG_EFFECT);
     effect->cPosition = std::make_shared<CPosition>(pos);
     effect->cPosition->rotation = angle / 180 * M_PI;
     effect->cCollision = std::make_shared<CCollision>(0, false);
-    const sf::Texture* tex;
-    switch (type)
-    {
-    case EFFECT_FINISH:
-        tex = &m_assets.getTexture("finish");
-        break;
-    case EFFECT_REACTOR:
-        tex = &m_assets.getTexture("reactor");
-        break;
-    }
+    
     effect->cEffect = std::make_shared<CEffect>(type);
+
+    // Add shape
     double width = 0.6, height = 1;
-    effect->cSprite = std::make_shared<CSprite>(width, height, *tex);
     effect->cRectShape = std::make_shared<CRectShape>(
         width, height, sf::Color(255, 255, 255, 128), sf::Color(0, 0, 0, 0), 0
     );
     effect->cRectShape->visible = false;
+
+    // Add sprite
+    switch (type)
+    {
+    case EFFECT_FINISH:
+        effect->cSprite = std::make_shared<CSprite>(width, height, m_gameEngine->assets().getTexture("finish"));
+        break;
+    case EFFECT_REACTOR:
+        effect->cSprite = std::make_shared<CSprite>(width, height, m_gameEngine->assets().getTexture("reactor"));
+        break;
+    }
 
     // Set position
     resetGeometryPosition(effect);

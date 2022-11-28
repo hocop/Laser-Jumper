@@ -1,4 +1,4 @@
-#include "../gameEngine.hpp"
+#include "../scenes/level.hpp"
 
 
 struct Collision
@@ -170,7 +170,7 @@ void detectLaserAndLineCollision(const std::shared_ptr<Entity>& player, const st
 }
 
 // Apply effect to player
-void GameEngine::applyEffect(std::shared_ptr<Entity>& effect, std::shared_ptr<Entity>& player)
+void Level::applyEffect(std::shared_ptr<Entity>& effect, std::shared_ptr<Entity>& player)
 {
     switch (effect->cEffect->type)
     {
@@ -180,7 +180,7 @@ void GameEngine::applyEffect(std::shared_ptr<Entity>& effect, std::shared_ptr<En
             m_camera->cCamera->target.reset();
         break;
     case EFFECT_REACTOR:
-        player->cReactor = std::make_shared<CReactor>(Vec2(10, 0), 0.5, m_assets.getTexture("reactorOnPlayer"));
+        player->cReactor = std::make_shared<CReactor>(Vec2(10, 0), 0.5, m_gameEngine->assets().getTexture("reactorOnPlayer"));
         player->cReactor->force = player->cReactor->force.rotate(effect->cPosition->rotation);
         player->cReactor->sprite.setRotation(effect->cPosition->rotation * 180 / M_PI);
         break;
@@ -188,7 +188,7 @@ void GameEngine::applyEffect(std::shared_ptr<Entity>& effect, std::shared_ptr<En
 }
 
 
-void GameEngine::processCollisions(std::shared_ptr<Entity>& player, std::shared_ptr<Entity>& entity)
+void Level::processCollisions(std::shared_ptr<Entity>& player, std::shared_ptr<Entity>& entity)
 {
     if (entity->cCollision)
     {
@@ -219,7 +219,7 @@ void GameEngine::processCollisions(std::shared_ptr<Entity>& player, std::shared_
 }
 
 
-void GameEngine::sCollision()
+void Level::sCollision()
 {
     // Player-Block interaction
     for (auto player : m_entities.getEntities(TAG_PLAYER))

@@ -1,16 +1,18 @@
-#include "../gameEngine.hpp"
+#include "../scenes/level.hpp"
 
 
-void GameEngine::sRender()
+void Level::sRender()
 {
-    auto players = m_entities.getEntities(TAG_PLAYER);
+    auto& players = m_entities.getEntities(TAG_PLAYER);
+
+    auto& window = m_gameEngine->window();
 
     // Set view from camera
-    m_window.setView(m_camera->cCamera->view);
-    m_window.clear(sf::Color(18, 33, 43));
+    window.setView(m_camera->cCamera->view);
+    window.clear(sf::Color(18, 33, 43));
 
     // Shaders' variables
-    for (auto& [key, shader] : m_assets.getShaders())
+    for (auto& [key, shader] : m_gameEngine->assets().getShaders())
     {
         shader.setUniform("u_time", m_time);
     }
@@ -20,43 +22,43 @@ void GameEngine::sRender()
     {
         resetGeometryPosition(entity);
         setShaderParams(entity);
-        drawEntity(m_window, entity);
+        drawEntity(window, entity);
     }
 
     // Draw blocks
     for (auto entity : m_entities.getEntities(TAG_BLOCK))
     {
-        drawEntity(m_window, entity);
+        drawEntity(window, entity);
     }
 
     // Draw effects
     for (auto entity : m_entities.getEntities(TAG_EFFECT))
     {
-        drawEntity(m_window, entity);
+        drawEntity(window, entity);
     }
 
     // Set default view
-    m_window.setView(m_window.getDefaultView());
+    window.setView(window.getDefaultView());
 
     // Draw HUD
     for (auto entity : m_entities.getEntities(TAG_HUD))
     {
         if (entity->cHudTimer)
-            drawHud(m_window, entity);
+            drawHud(window, entity);
     }
 
-    m_window.display();
+    window.display();
 }
 
 
-void GameEngine::setShaderParams(std::shared_ptr<Entity>& entity)
+void Level::setShaderParams(std::shared_ptr<Entity>& entity)
 {
     if (entity->cShader)
     {
         Vec2 center = worldToScreen(entity->cPosition->vec);
         sf::Glsl::Vec2 centerGL(center.x, center.y);
         entity->cShader->shader->setUniform("u_center", centerGL);
-        entity->cShader->shader->setUniform("u_radius", float(entity->cCircleShape->radius / m_camera->cCamera->scale * m_window.getSize().x));
+        entity->cShader->shader->setUniform("u_radius", float(entity->cCircleShape->radius / m_camera->cCamera->scale * m_gameEngine->window().getSize().x));
     }
 }
 
