@@ -1,8 +1,11 @@
 #include "level.hpp"
 
 
-Level::Level()
+Level::Level(GameEngine& gameEngine)
 {
+    // Store pointer to gameEngine
+    m_gameEngine = &gameEngine;
+
     // Init constants
     m_deltaT = DELTA_T_us * 0.000001;
 

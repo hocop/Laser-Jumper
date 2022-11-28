@@ -155,23 +155,26 @@ std::shared_ptr<Entity> Level::spawnEffect(const Vec2& pos, const EffectType& ty
     effect->cPosition = std::make_shared<CPosition>(pos);
     effect->cPosition->rotation = angle / 180 * M_PI;
     effect->cCollision = std::make_shared<CCollision>(0, false);
-    const sf::Texture* tex;
-    switch (type)
-    {
-    case EFFECT_FINISH:
-        tex = &(m_gameEngine->assets().getTexture("finish"));
-        break;
-    case EFFECT_REACTOR:
-        tex = &(m_gameEngine->assets().getTexture("reactor"));
-        break;
-    }
+    
     effect->cEffect = std::make_shared<CEffect>(type);
+
+    // Add shape
     double width = 0.6, height = 1;
-    effect->cSprite = std::make_shared<CSprite>(width, height, *tex);
     effect->cRectShape = std::make_shared<CRectShape>(
         width, height, sf::Color(255, 255, 255, 128), sf::Color(0, 0, 0, 0), 0
     );
     effect->cRectShape->visible = false;
+
+    // Add sprite
+    switch (type)
+    {
+    case EFFECT_FINISH:
+        effect->cSprite = std::make_shared<CSprite>(width, height, m_gameEngine->assets().getTexture("finish"));
+        break;
+    case EFFECT_REACTOR:
+        effect->cSprite = std::make_shared<CSprite>(width, height, m_gameEngine->assets().getTexture("reactor"));
+        break;
+    }
 
     // Set position
     resetGeometryPosition(effect);

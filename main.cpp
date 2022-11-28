@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 {
     GameEngine game;
 
-    Level level;
+    Level level(game);
     level.loadMap("resource/tracks/hard/level3.json");
     level.spawnCamera(CAMERA_FOCUS_PLAYER);
     level.spawnHud();

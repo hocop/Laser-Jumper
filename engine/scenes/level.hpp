@@ -18,7 +18,7 @@ private:
     std::shared_ptr<Entity> m_timer;
 
 public:
-    Level();
+    Level(GameEngine& gameEngine);
     ~Level() {};
 
     void update();

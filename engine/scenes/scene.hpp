@@ -28,12 +28,12 @@ typedef std::unordered_map<int, std::string> ActionMap;
 class Scene
 {
 protected:
-    EntityManager               m_entities;
-    std::shared_ptr<GameEngine> m_gameEngine;
-    ActionMap                   m_actionMap;
+    EntityManager   m_entities;
+    GameEngine*     m_gameEngine;
+    ActionMap       m_actionMap;
 
 public:
-    Scene() {};
+    Scene(GameEngine& gameEngine);
     ~Scene() {};
 
     virtual void update() = 0;
