@@ -57,10 +57,11 @@ void GameEngine::changeScene(const std::string newSceneName)
     m_currentScene = newSceneName;
 }
 
-void GameEngine::changeScene(const std::string newSceneName, std::shared_ptr<Scene> scene)
+void GameEngine::addScene(const std::string newSceneName, std::shared_ptr<Scene> scene)
 {
-    m_currentScene = newSceneName;
-    m_scenes[m_currentScene] = scene;
+    if (m_currentScene == "")
+        m_currentScene = newSceneName;
+    m_scenes[newSceneName] = scene;
 }
 
 void GameEngine::quit()

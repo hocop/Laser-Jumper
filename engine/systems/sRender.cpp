@@ -27,25 +27,19 @@ void Level::sRender()
 
     // Draw blocks
     for (auto entity : m_entities.getEntities(TAG_BLOCK))
-    {
         drawEntity(window, entity);
-    }
 
     // Draw effects
     for (auto entity : m_entities.getEntities(TAG_EFFECT))
-    {
         drawEntity(window, entity);
-    }
 
-    // Set default view
+
+    // Set default view to draw HUD
     window.setView(window.getDefaultView());
 
     // Draw HUD
     for (auto entity : m_entities.getEntities(TAG_HUD))
-    {
-        if (entity->cHudTimer)
-            drawHud(window, entity);
-    }
+        drawEntity(window, entity);
 
     window.display();
 }
@@ -88,17 +82,9 @@ void drawEntity(sf::RenderWindow& window, const std::shared_ptr<Entity> &entity)
 
     if (entity->cSprite)
         window.draw(entity->cSprite->sprite);
-}
 
-void drawHud(sf::RenderWindow& window, const std::shared_ptr<Entity> &entity)
-{
-    if (entity->cHudTimer)
-    {
-        if (entity->cHudTimer->target)
-            if (entity->cHudTimer->target->cTimer)
-                entity->cHudTimer->text.setString(std::to_string(entity->cHudTimer->target->cTimer->timer));
-        window.draw(entity->cHudTimer->text);
-    }
+    if (entity->cText)
+        window.draw(entity->cText->text);
 }
 
 void resetGeometryPosition(std::shared_ptr<Entity> &entity)
@@ -153,4 +139,7 @@ void resetGeometryPosition(std::shared_ptr<Entity> &entity)
 
     if (entity->cReactor)
         entity->cReactor->sprite.setPosition(entity->cPosition->vec.as_sf());
+    
+    if (entity->cText)
+        entity->cText->text.setPosition(entity->cPosition->vec.as_sf());
 }

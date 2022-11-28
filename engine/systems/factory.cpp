@@ -1,6 +1,25 @@
 #include "../scenes/level.hpp"
 
 
+void Scene::spawnButtonRect(const std::string& action, const std::string& text, const Vec2& pos, const Vec2& size)
+{
+    auto button = m_entities.addEntity(TAG_HUD);
+    button->cButton = std::make_shared<CButton>(action);
+    button->cRectShape = std::make_shared<CRectShape>(
+        size.x, size.y,
+        sf::Color(76, 51, 5, 255),
+        sf::Color(128, 128, 128, 255),
+        0
+    );
+    button->cPosition = std::make_shared<CPosition>(pos);
+
+    button->cText = std::make_shared<CText>(m_gameEngine->assets().getFont("regular"));
+    button->cText->text.setString(text);
+
+    resetGeometryPosition(button);
+}
+
+
 void Level::loadMap(const std::string& path)
 {
     std::ifstream f(path);
@@ -86,7 +105,7 @@ std::shared_ptr<Entity> Level::spawnPlayer(const Vec2& pos)
     
     // Bind timer to player
     if (m_timer)
-        m_timer->cHudTimer->target = m_player;
+        m_player->cTimer->target = m_timer;
 
     resetGeometryPosition(m_player);
     return m_player;
@@ -139,13 +158,6 @@ void Level::spawnCamera(const CameraType& focus)
     m_camera->cCamera = std::make_shared<CCamera>();
     m_camera->cPosition = std::make_shared<CPosition>();
     m_camera->cCamera->type = focus;
-}
-
-
-void Level::spawnHud()
-{
-    m_timer = m_entities.addEntity(TAG_HUD);
-    m_timer->cHudTimer = std::make_shared<CHudTimer>(m_gameEngine->assets().getFont("regular"));
 }
 
 

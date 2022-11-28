@@ -76,6 +76,7 @@ struct CTimer
 {
     double timer;
     bool running;
+    std::shared_ptr<Entity> target;
 
     CTimer()
     :   timer(0), running(true)

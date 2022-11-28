@@ -16,6 +16,14 @@ Level::Level(GameEngine& gameEngine)
     registerAction(sf::Keyboard::Q,         "exit");
     registerAction(sf::Keyboard::Y,         "delete_last");
     registerAction(sf::Keyboard::C,         "change_level");
+
+    // Add buttons
+    spawnButtonRect("exit",     "X", Vec2(1200, 25),    Vec2(80, 50));
+    spawnButtonRect("restart",  "R", Vec2(500, 25),     Vec2(80, 50));
+
+    // Add timer
+    m_timer = m_entities.addEntity(TAG_HUD);
+    m_timer->cText = std::make_shared<CText>(m_gameEngine->assets().getFont("regular"));
 }
 
 

@@ -7,17 +7,25 @@
 class Entity;
 
 
-struct CHudTimer
+struct CButton
 {
-    std::shared_ptr<Entity> target;
+    std::string action;
+    CButton(const std::string& action)
+    :   action(action)
+    {}
+};
+
+
+struct CText
+{
     sf::Text text;
 
-    CHudTimer(const sf::Font& font)
+    CText(const sf::Font& font)
     {
         text.setFont(font);
         text.setString("Timer");
         text.setCharacterSize(24); // pixels
         text.setFillColor(sf::Color::White);
     };
-    ~CHudTimer() {};
+    ~CText() {};
 };

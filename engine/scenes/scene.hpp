@@ -47,6 +47,9 @@ public:
     };
 
     ActionMap& actionMap() {return m_actionMap;};
+    const EntityVec& getHud() {return m_entities.getEntities(TAG_HUD);};
+
+    void spawnButtonRect(const std::string& action, const std::string& text, const Vec2& pos, const Vec2& size);
 };
 
 

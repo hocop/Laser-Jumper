@@ -22,7 +22,7 @@ public:
     void run();
 
     void changeScene(const std::string newSceneName);
-    void changeScene(const std::string newSceneName, std::shared_ptr<Scene> scene);
+    void addScene(const std::string newSceneName, std::shared_ptr<Scene> scene);
 
     void quit();
 

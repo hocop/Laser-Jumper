@@ -14,7 +14,6 @@ enum EntityTag
     TAG_PLAYER,
     TAG_BLOCK,
     TAG_EFFECT,
-    TAG_BUTTON,
     TAG_HUD,
     TAG_CAMERA
 };
@@ -52,7 +51,8 @@ public:
     // Camera
     std::shared_ptr<CCamera>        cCamera;
     // Hud
-    std::shared_ptr<CHudTimer>      cHudTimer;
+    std::shared_ptr<CText>          cText;
+    std::shared_ptr<CButton>        cButton;
 
 
     EntityTag const& tag() {return m_tag;};
