@@ -11,11 +11,14 @@ private:
     double                  m_deltaT;
     float                   m_time;
     bool                    m_paused = false;
+    std::string             m_mapName;
 
     std::shared_ptr<Entity> m_camera;
     std::shared_ptr<Entity> m_player;
     std::shared_ptr<Entity> m_timer;
     std::shared_ptr<Entity> m_countdown;
+
+    void loadLandscape(const std::string& path);
 
 public:
     Level(GameEngine& gameEngine);

@@ -2,18 +2,59 @@
 #include "../gameEngine.hpp"
 
 
+std::string pathJoin(const std::string& path, const std::string& file)
+{
+    if (path.back() == '/')
+        return path + file;
+    else
+        return path + "/" + file;
+}
+
+template<typename T>
+T get(const json& from, const std::string& key, const T& defValue)
+{
+    return from.contains(key)? T(from[key]) : defValue;
+}
+
+
 void Level::loadMap(const std::string& path)
 {
-    std::ifstream f(path);
+    std::string mainFilePath = pathJoin(path, "map.json");
+    
+    std::ifstream f(mainFilePath);
+    std::cout << "Reading " << mainFilePath << std::endl;
     json map = json::parse(f);
+
+    // Get map name
+    m_mapName = map["name"];
+
+    // Load items
+    for (auto item : map["items"])
+    {
+        if (item["type"] == "reactor")
+            spawnEffect(Vec2(item["x"], item["y"]), EFFECT_REACTOR, get<double>(item, "angle", 0.0));
+
+        else if (item["type"] == "finish")
+            spawnEffect(Vec2(item["x"], item["y"]), EFFECT_FINISH, get<double>(item, "angle", 0.0));
+
+        else if (item["type"] == "landscape")
+            loadLandscape(pathJoin(path, item["file"]));
+    }
+}
+
+
+void Level::loadLandscape(const std::string& path)
+{
+    std::ifstream f(path);
+    json landscape = json::parse(f);
 
     Vec2 diffPrev;
     std::shared_ptr<Entity> linePrev;
 
-    for (int i = 0; i < map["X"].size() - 1; i++)
+    for (int i = 0; i < landscape["X"].size() - 1; i++)
     {
-        Vec2 start(map["X"][i], map["Y"][i]);
-        Vec2 end(map["X"][i + 1], map["Y"][i + 1]);
+        Vec2 start(landscape["X"][i], landscape["Y"][i]);
+        Vec2 end(landscape["X"][i + 1], landscape["Y"][i + 1]);
 
         start.y = -start.y;
         end.y = -end.y;
@@ -37,14 +78,6 @@ void Level::loadMap(const std::string& path)
 
         diffPrev = diff;
     }
-
-    // Add start booster
-    spawnEffect(Vec2(0, -2), EFFECT_REACTOR);
-
-    // Add finishes
-    spawnEffect(linePrev->cPosition->vec + Vec2(0, -0.5), EFFECT_FINISH);
-    spawnEffect(linePrev->cPosition->vec + Vec2(0, -1.5), EFFECT_FINISH);
-    spawnEffect(linePrev->cPosition->vec + Vec2(0, -2.5), EFFECT_FINISH);
 }
 
 
