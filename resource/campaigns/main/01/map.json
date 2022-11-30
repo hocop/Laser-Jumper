@@ -1,0 +1,25 @@
+{
+    "name": "Main 01 - Hills",
+    "items": [
+        {
+            "type": "reactor",
+            "pos": {"x": 0.0, "y": -2.0}
+        },
+        {
+            "type": "finish",
+            "pos": {"x": 301.0, "y": -0.5}
+        },
+        {
+            "type": "finish",
+            "pos": {"x": 301.0, "y": -1.5}
+        },
+        {
+            "type": "finish",
+            "pos": {"x": 301.0, "y": -2.5}
+        },
+        {
+            "type": "landscape",
+            "file": "hard3.json"
+        }
+    ]
+}

@@ -26,11 +26,7 @@ void Level::sLifetime()
                     // Update timer text
                     if (player->cTimer->target)
                         if (player->cTimer->target->cText)
-                        {
-                            std::stringstream stream;
-                            stream << std::fixed << std::setprecision(2) << player->cTimer->timer;
-                            player->cTimer->target->cText->text.setString(stream.str());
-                        }
+                            player->cTimer->target->cText->setString(player->cTimer->getString());
                 }
         }
     }
@@ -40,7 +36,7 @@ void Level::sLifetime()
         // Count down before start
         m_countdown->cCountdown->time -= m_deltaT;
         // Update countdown text
-        m_countdown->cText->text.setString(std::to_string(m_countdown->cCountdown->time));
+        m_countdown->cText->setString(m_countdown->cCountdown->getString());
         // Destroy countdown
         if (m_countdown->cCountdown->time <= 0)
         {

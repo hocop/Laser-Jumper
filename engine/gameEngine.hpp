@@ -13,7 +13,7 @@ private:
     Assets                  m_assets;
 
     std::map<std::string, std::shared_ptr<Scene>>   m_scenes;
-    std::string                                     m_currentScene;
+    std::string                                     m_currentSceneName;
 
 public:
     GameEngine();
@@ -26,10 +26,10 @@ public:
 
     void quit();
 
-    std::shared_ptr<Scene> currentScene();
-    std::string currentSceneName();
-    Assets& assets();
-    sf::RenderWindow& window();
+    std::shared_ptr<Scene>  currentScene();
+    const std::string&      currentSceneName();
+    Assets&                 assets();
+    sf::RenderWindow&       window();
 
     void sUserInput();
 };

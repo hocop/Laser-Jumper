@@ -20,7 +20,7 @@ Level::Level(GameEngine& gameEngine)
 
     // Add buttons
     spawnButtonRect("X", "exit",    Vec2(.9, .001),    Vec2(.1, .1));
-    spawnButtonRect("R", "restart", Vec2(.4, .001),     Vec2(.1, .1));
+    spawnButtonRect("R", "restart", Vec2(.0, .001),     Vec2(.1, .1));
 }
 
 
@@ -48,6 +48,7 @@ void Level::reset()
         players[i]->destroy();
 
     // Start new run
+    spawnCamera(CAMERA_FOCUS_PLAYER);
     spawnTimer();
     spawnPlayer(Vec2(0, -1));
     spawnCountdown();
@@ -57,7 +58,7 @@ void Level::reset()
 void Level::sDoAction(const Action& action)
 {
     if (action.name() == "exit" && action.type() == "start")
-        m_gameEngine->changeScene("main_menu");
+        m_gameEngine->changeScene("campaign_menu");
     
     if (action.name() == "pause" && action.type() == "start")
         m_paused = !m_paused;

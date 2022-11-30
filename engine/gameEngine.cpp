@@ -54,13 +54,13 @@ GameEngine::~GameEngine()
 
 void GameEngine::changeScene(const std::string newSceneName)
 {
-    m_currentScene = newSceneName;
+    m_currentSceneName = newSceneName;
 }
 
 void GameEngine::addScene(const std::string newSceneName, std::shared_ptr<Scene> scene)
 {
-    if (m_currentScene == "")
-        m_currentScene = newSceneName;
+    if (m_currentSceneName == "")
+        m_currentSceneName = newSceneName;
     m_scenes[newSceneName] = scene;
 }
 
@@ -72,12 +72,12 @@ void GameEngine::quit()
 
 std::shared_ptr<Scene> GameEngine::currentScene()
 {
-    return m_scenes[m_currentScene];
+    return m_scenes[m_currentSceneName];
 }
 
-std::string GameEngine::currentSceneName()
+const std::string& GameEngine::currentSceneName()
 {
-    return m_currentScene;
+    return m_currentSceneName;
 }
 
 Assets& GameEngine::assets()

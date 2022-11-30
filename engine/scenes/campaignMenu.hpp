@@ -3,13 +3,13 @@
 #include "scene.hpp"
 
 
-class MainMenu : public Scene
+class CampaignMenu : public Scene
 {
 private:
 
 public:
-    MainMenu(GameEngine& gameEngine);
-    ~MainMenu() {};
+    CampaignMenu(GameEngine& gameEngine);
+    ~CampaignMenu() {};
 
     void update();
     void sDoAction(const Action& anction);

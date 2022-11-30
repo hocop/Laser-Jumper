@@ -3,7 +3,7 @@
 #include "../gameEngine.hpp"
 
 
-void MainMenu::sRender()
+void Scene::sRender()
 {
     auto& window = m_gameEngine->window();
     window.clear(sf::Color(33, 43, 18));

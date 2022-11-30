@@ -2,6 +2,7 @@
 
 #include "../utils/vec2.hpp"
 #include <SFML/Graphics.hpp>
+#include <iomanip>
 
 
 enum ControlType
@@ -21,7 +22,7 @@ struct CLaser
     double lengthNeutral;
     double lengthActive;
     double orientation = 1;
-    double friction = 0.0;
+    double friction = 0.1;
     double frictionOmega = 50;
     double omega = 10;
     float laserThicknessNeutral;
@@ -82,6 +83,13 @@ struct CTimer
     :   timer(0), running(true)
     {};
     ~CTimer() {};
+
+    std::string getString()
+    {
+        std::stringstream stream;
+        stream << std::fixed << std::setprecision(2) << timer;
+        return stream.str();
+    };
 };
 
 

@@ -19,8 +19,8 @@ struct State
 struct Derivatives
 {
     Vec2 acc;
-    double dLength;
-    double slipVel;
+    double dLength = 0;
+    double slipVel = 0;
 };
 
 
@@ -126,6 +126,7 @@ void Level::sPhysics()
                 entity->cPosition->vec += newState.vel * m_deltaT + drvs.acc * deltaTSqhalf;
                 entity->cVelocity->vec = newState.vel;
                 entity->cLaser->slip = newState.slip;
+                entity->cLaser->length = newState.length;
             }
         }
     }
@@ -137,22 +138,28 @@ void Level::sPhysics()
         auto target = m_camera->cCamera->target;
         const Vec2& pos = target->cPosition->vec;
         const Vec2& vel = target->cVelocity->vec;
-        // Modify camera scale
         double tgtScale = mapRange(std::abs(vel.x), 0, 2, 16, 20);
         if (m_camera->cCamera->scale < 0)
+        {
+            // Move camera for the first time
             m_camera->cCamera->scale = tgtScale;
+            origin = pos;
+        }
         else
+        {
+            // Modify camera scale
             m_camera->cCamera->scale += m_deltaT * m_camera->cCamera->gamma * (tgtScale - m_camera->cCamera->scale);
-        // Move camera in front of player
-        double tgtXShift = mapRange(vel.x, -10, 10, -2, 2);
-        m_camera->cCamera->xShift += m_deltaT * m_camera->cCamera->gamma * (tgtXShift - m_camera->cCamera->xShift);
-        origin.x = pos.x + m_camera->cCamera->xShift;
-        if (pos.y > origin.y + m_camera->cCamera->yWall)
-            origin.y = pos.y - m_camera->cCamera->yWall;
-        else if (pos.y < origin.y - m_camera->cCamera->yWall)
-            origin.y = pos.y + m_camera->cCamera->yWall;
-        else
-            origin.y += m_camera->cCamera->yGamma * (pos.y - origin.y);
+            // Move camera in front of player
+            double tgtXShift = mapRange(vel.x, -10, 10, -2, 2);
+            m_camera->cCamera->xShift += m_deltaT * m_camera->cCamera->gamma * (tgtXShift - m_camera->cCamera->xShift);
+            origin.x = pos.x + m_camera->cCamera->xShift;
+            if (pos.y > origin.y + m_camera->cCamera->yWall)
+                origin.y = pos.y - m_camera->cCamera->yWall;
+            else if (pos.y < origin.y - m_camera->cCamera->yWall)
+                origin.y = pos.y + m_camera->cCamera->yWall;
+            else
+                origin.y += m_camera->cCamera->yGamma * (pos.y - origin.y);
+        }
     }
     float aspect = float(m_gameEngine->window().getSize().y) / float(m_gameEngine->window().getSize().x);
     float width = m_camera->cCamera->scale;

@@ -7,6 +7,7 @@ add_library(
 
     scenes/level.cpp
     scenes/mainMenu.cpp
+    scenes/campaignMenu.cpp
 
     utils/assets.cpp
     utils/vec2.cpp

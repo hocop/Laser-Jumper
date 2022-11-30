@@ -9,11 +9,10 @@ MainMenu::MainMenu(GameEngine& gameEngine)
 
     // Register actions
     registerAction(sf::Keyboard::Q,         "exit");
-    registerAction(sf::Keyboard::Space,     "play_hard");
+    registerAction(sf::Keyboard::Space,     "play");
 
     // Add buttons
-    spawnButtonRect("Play hard level",      "play_hard",    Vec2(0.1, 0.2),    Vec2(0.4, 0.1));
-    spawnButtonRect("Play deadly level",    "play_deadly",  Vec2(0.1, 0.4),    Vec2(0.4, 0.1));
+    spawnButtonRect("Choose level",         "play",    Vec2(0.1, 0.2),    Vec2(0.4, 0.1));
     spawnButtonRect("Exit",                 "exit",         Vec2(0.1, 0.6),    Vec2(0.4, 0.1));
 }
 
@@ -30,15 +29,9 @@ void MainMenu::sDoAction(const Action& action)
     if (action.name() == "exit" && action.type() == "start")
         m_gameEngine->quit();
 
-    if (action.name() == "play_hard" && action.type() == "start")
+    if (action.name() == "play" && action.type() == "start")
     {
-        m_gameEngine->changeScene("hard");
-        m_gameEngine->currentScene()->reset();
-    }
-
-    if (action.name() == "play_deadly" && action.type() == "start")
-    {
-        m_gameEngine->changeScene("deadly");
+        m_gameEngine->changeScene("campaign_menu");
         m_gameEngine->currentScene()->reset();
     }
 }

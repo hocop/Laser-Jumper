@@ -39,7 +39,7 @@ public:
 
     virtual void update() = 0;
     virtual void sDoAction(const Action& action) = 0;
-    virtual void sRender() = 0;
+    virtual void sRender();
     virtual void reset() = 0;
 
     void registerAction(const int& key, const std::string& actionName)

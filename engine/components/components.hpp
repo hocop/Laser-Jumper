@@ -4,6 +4,6 @@
 #include "effects.hpp"
 #include "geometry.hpp"
 #include "graphical.hpp"
-#include "hud.hpp"
+#include "interface.hpp"
 #include "movement.hpp"
 #include "players.hpp"

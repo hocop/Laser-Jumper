@@ -3,21 +3,13 @@
 #include "../utils/vec2.hpp"
 
 
-struct CScreenPosition
-{
-    public:
-    Vec2 vec;
-    CScreenPosition() {};
-    CScreenPosition(const Vec2& vecIn) : vec(vecIn) {};
-};
-
 struct CPosition
 {
     public:
     Vec2 vec;
     double rotation;
     CPosition() {};
-    CPosition(const Vec2& vecIn) : vec(vecIn) {};
+    CPosition(const Vec2& vecIn, const double& rotation=0.0) : vec(vecIn), rotation(rotation) {};
 };
 
 struct CVelocity

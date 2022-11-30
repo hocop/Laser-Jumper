@@ -19,9 +19,7 @@ std::shared_ptr<Entity> Scene::spawnButtonRect(const std::string& text, const st
     button->cPosition = std::make_shared<CPosition>(Vec2(pos.x * ws.x + sizeReal.x / 2, pos.y * ws.y + sizeReal.y / 2));
 
     button->cText = std::make_shared<CText>(m_gameEngine->assets().getFont("regular"));
-    button->cText->text.setString(text);
-    auto textBox = button->cText->text.getGlobalBounds();
-    button->cText->text.setOrigin(sf::Vector2f(textBox.width / 2.0, textBox.height / 2.0));
+    button->cText->setString(text);
 
     resetGeometryPosition(button);
 

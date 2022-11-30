@@ -4,6 +4,9 @@
 
 std::shared_ptr<Entity> Level::spawnCamera(const CameraType& focus)
 {
+    if (m_camera)
+        m_camera->destroy();
+
     m_camera = m_entities.addEntity(TAG_CAMERA);
     m_camera->cCamera = std::make_shared<CCamera>();
     m_camera->cPosition = std::make_shared<CPosition>();
@@ -22,6 +25,7 @@ std::shared_ptr<Entity> Level::spawnPlayer(const Vec2& pos)
     m_player->cGravity = std::make_shared<CGravity>();
 
     m_player->cShader = std::make_shared<CShader>(m_gameEngine->assets().getShader("blinking"));
+    // m_player->cShader = std::make_shared<CShader>("blinking");
 
     m_player->cTimer = std::make_shared<CTimer>();
 

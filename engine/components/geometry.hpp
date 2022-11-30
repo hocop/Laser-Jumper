@@ -52,8 +52,8 @@ struct CRectShape
 struct CLineShape
 {
     bool                doubleSided;
-    double              angleLeft;
-    double              angleRight;
+    double              angleLeft = 0;
+    double              angleRight = 0;
     double              length;
     double              thickness;
     sf::Vertex          rect[4];
