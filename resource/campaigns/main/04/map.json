@@ -1,0 +1,29 @@
+{
+    "name": "Main 04 - Uphill",
+    "items": [
+        {
+            "type": "reactor",
+            "x": 0.0,
+            "y": -2.0
+        },
+        {
+            "type": "finish",
+            "x": 301.0,
+            "y": -0.5
+        },
+        {
+            "type": "finish",
+            "x": 301.0,
+            "y": -1.5
+        },
+        {
+            "type": "finish",
+            "x": 301.0,
+            "y": -2.5
+        },
+        {
+            "type": "landscape",
+            "file": "level1.json"
+        }
+    ]
+}

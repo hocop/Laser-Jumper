@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
     game.addScene("campaign_menu", std::make_shared<CampaignMenu>(campaignMenu));
 
     Level levelHard(game);
-    levelHard.loadMap("resource/campaigns/main/01");
+    levelHard.loadMap("resource/campaigns/main/05_speedcheck");
     game.addScene("hard", std::make_shared<Level>(levelHard));
 
     Level levelDeadly(game);

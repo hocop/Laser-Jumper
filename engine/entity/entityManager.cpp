@@ -55,7 +55,13 @@ void EntityManager::update()
         m_entityMap[entity->tag()].push_back(entity);
         // Add entity to the chunk map
         if(entity->cPosition && !entity->cVelocity)
-            m_chunkMap[entity->tag()][coordinateToKey(entity->cPosition->vec)].push_back(entity);
+        {
+            if (entity->cLineShape)
+                for (auto key : coordinateToKeys(entity->cPosition->vec, Vec2(entity->cLineShape->length, entity->cLineShape->length)))
+                    m_chunkMap[entity->tag()][key].push_back(entity);
+            else
+                m_chunkMap[entity->tag()][coordinateToKey(entity->cPosition->vec)].push_back(entity);
+        }
     }
 
     // Reset toAdd buffer
