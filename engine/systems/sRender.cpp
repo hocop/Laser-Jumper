@@ -141,13 +141,13 @@ void resetGeometryPosition(std::shared_ptr<Entity> &entity)
             explosionThickness = 0;
 
         auto laserTexSize = entity->cLaser->laserSprite.getTexture()->getSize();
-        entity->cLaser->laserSprite.setScale(sf::Vector2f(laserThickness / laserTexSize.x, entity->cLaser->length / laserTexSize.y));
+        entity->cLaser->laserSprite.setScale(sf::Vector2f(laserThickness / laserTexSize.x, entity->cLaser->orientation * entity->cLaser->length / laserTexSize.y));
         entity->cLaser->laserSprite.setPosition(entity->cPosition->vec.as_sf());
 
         auto explosionTexSize = entity->cLaser->explosionSprite.getTexture()->getSize();
-        entity->cLaser->explosionSprite.setScale(sf::Vector2f(explosionThickness * 2 / explosionTexSize.x, explosionThickness / explosionTexSize.y));
+        entity->cLaser->explosionSprite.setScale(sf::Vector2f(explosionThickness * 2 / explosionTexSize.x, entity->cLaser->orientation * explosionThickness / explosionTexSize.y));
         Vec2 explosionPos = entity->cPosition->vec;
-        explosionPos.y += entity->cLaser->length;
+        explosionPos.y += entity->cLaser->orientation * entity->cLaser->length;
         entity->cLaser->explosionSprite.setPosition(explosionPos.as_sf());
         entity->cLaser->explosionSprite.setRotation(entity->cLaser->attackAngle * 180 / M_PI);
     }

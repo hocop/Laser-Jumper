@@ -10,8 +10,9 @@ add_library(
     scenes/campaignMenu.cpp
 
     utils/assets.cpp
-    utils/vec2.cpp
     utils/keycodes.cpp
+    utils/reading.cpp
+    utils/vec2.cpp
 
     factory/moving.cpp
     factory/stationary.cpp

@@ -1,5 +1,6 @@
 #include "level.hpp"
 #include "../gameEngine.hpp"
+#include "../utils/reading.hpp"
 
 
 Level::Level(GameEngine& gameEngine)
@@ -40,6 +41,32 @@ void Level::update()
 }
 
 
+void Level::loadMap(const std::string& path)
+{
+    std::string mainFilePath = rd::join(path, "map.json");
+    
+    std::ifstream f(mainFilePath);
+    std::cout << "Reading " << mainFilePath << std::endl;
+    json map = json::parse(f);
+
+    // Get map name
+    m_mapName = map["name"];
+
+    // Load items
+    for (auto item : map["items"])
+    {
+        if (item["type"] == "reactor")
+            spawnEffect(Vec2(item["x"], item["y"]), EFFECT_REACTOR, rd::get<double>(item, "angle", 0.0));
+
+        else if (item["type"] == "finish")
+            spawnEffect(Vec2(item["x"], item["y"]), EFFECT_FINISH, rd::get<double>(item, "angle", 0.0));
+
+        else if (item["type"] == "landscape")
+            loadLandscape(rd::join(path, item["file"]));
+    }
+}
+
+
 void Level::reset()
 {
     // Remove all players
@@ -50,7 +77,7 @@ void Level::reset()
     // Start new run
     spawnCamera(CAMERA_FOCUS_PLAYER);
     spawnTimer();
-    spawnPlayer(Vec2(0, -1));
+    spawnPlayer(Vec2(0, 1));
     spawnCountdown();
 }
 
@@ -85,7 +112,7 @@ void Level::sDoAction(const Action& action)
 
     if (action.name() == "jump" && running())
         if(m_player)
-            if (action.type() == "start")
+            if (action.type() == "start" && m_player->cControl)
                 m_player->cLaser->lengthTgt = m_player->cLaser->lengthActive;
             else
                 m_player->cLaser->lengthTgt = m_player->cLaser->lengthNeutral;

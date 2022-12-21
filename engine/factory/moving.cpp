@@ -23,6 +23,7 @@ std::shared_ptr<Entity> Level::spawnPlayer(const Vec2& pos)
     m_player->cVelocity = std::make_shared<CVelocity>(Vec2(0, 0));
     m_player->cCollision = std::make_shared<CCollision>();
     m_player->cGravity = std::make_shared<CGravity>();
+    m_player->cControl = std::make_shared<CControl>();
 
     m_player->cShader = std::make_shared<CShader>(m_gameEngine->assets().getShader("blinking"));
     // m_player->cShader = std::make_shared<CShader>("blinking");

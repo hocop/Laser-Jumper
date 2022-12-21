@@ -2,6 +2,7 @@
     {"type": "texture", "key": "laserBeam",         "path": "resource/textures/laser_beam.png"},
     {"type": "texture", "key": "explosion",         "path": "resource/textures/explosion.png"},
     {"type": "texture", "key": "reactor",           "path": "resource/textures/reactor.png"},
+    {"type": "texture", "key": "flip",              "path": "resource/textures/flip.png"},
     {"type": "texture", "key": "reactorOnPlayer",   "path": "resource/textures/reactor_on_player.png"},
     {"type": "texture", "key": "finish",            "path": "resource/textures/finish.png"},
 

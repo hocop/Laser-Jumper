@@ -1,0 +1,37 @@
+{
+    "name": "Main 04 - Speedcheck",
+    "medals":
+    {
+        "gold":   10.00,
+        "silver": 10.20,
+        "bronze": 15.00
+    },
+    "items": [
+        {
+            "type": "reactor",
+            "x": 0.0,
+            "y": 2.0
+        },
+        {
+            "type": "finish",
+            "x": 130.0,
+            "y": 6.5
+        },
+        {
+            "type": "landscape",
+            "file": "level.json"
+        },
+        {
+            "type": "landscape",
+            "file": "wall_left.json"
+        },
+        {
+            "type": "landscape",
+            "file": "wall_right.json"
+        },
+        {
+            "type": "landscape",
+            "file": "floor.json"
+        }
+    ]
+}

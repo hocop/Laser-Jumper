@@ -17,13 +17,6 @@ MainMenu::MainMenu(GameEngine& gameEngine)
 }
 
 
-void MainMenu::update()
-{
-    // Add and delete entities
-    m_entities.update();
-}
-
-
 void MainMenu::sDoAction(const Action& action)
 {
     if (action.name() == "exit" && action.type() == "start")

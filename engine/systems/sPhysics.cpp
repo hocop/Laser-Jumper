@@ -45,7 +45,7 @@ Derivatives computeDerivatives(const std::shared_ptr<Entity>& entity, const Stat
             // Spring force
             double k = entity->cLaser->omega * entity->cLaser->omega;
             double relvel = -entity->cLaser->orientation * (state.vel.x * std::tan(entity->cLaser->attackAngle) - state.vel.y);
-            double laserF = -entity->cGravity->g * 0.99 + k * dl - 2 * entity->cLaser->omega * relvel;
+            double laserF = -entity->cLaser->orientation * entity->cGravity->g * 0.99 + k * dl - 2 * entity->cLaser->omega * relvel;
             laserF = entity->cLaser->orientation * std::min(laserF, 0.0);
 
             // Friction force
@@ -165,5 +165,5 @@ void Level::sPhysics()
     float width = m_camera->cCamera->scale;
     float height = width * aspect;
 
-    m_camera->cCamera->view.reset(sf::FloatRect(origin.x - width * 0.5, origin.y - height * 0.5, width, height));
+    m_camera->cCamera->view.reset(sf::FloatRect(origin.x - width * 0.5, origin.y + height * 0.5, width, -height));
 }

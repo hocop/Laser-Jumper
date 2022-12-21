@@ -15,15 +15,15 @@ int main(int argc, char *argv[])
     game.addScene("main_menu", std::make_shared<MainMenu>(mainMenu));
 
     CampaignMenu campaignMenu(game);
-    // campaignMenu.loadCampaign("resource/campaigns/main.json");
+    // campaignMenu.loadCampaign("resource/campaigns/main");
     game.addScene("campaign_menu", std::make_shared<CampaignMenu>(campaignMenu));
 
     Level levelHard(game);
-    levelHard.loadMap("resource/campaigns/main/05_speedcheck");
+    levelHard.loadMap("resource/campaigns/main/02_hills");
     game.addScene("hard", std::make_shared<Level>(levelHard));
 
     Level levelDeadly(game);
-    levelDeadly.loadMap("resource/campaigns/main/02");
+    levelDeadly.loadMap("resource/campaigns/main/04_speedcheck");
     game.addScene("deadly", std::make_shared<Level>(levelDeadly));
 
     game.run();

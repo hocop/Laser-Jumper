@@ -12,7 +12,7 @@ struct CSprite
         sprite.setTexture(texture);
         auto texSize = texture.getSize();
         sprite.setOrigin(sf::Vector2f(texSize.x / 2.0, texSize.y / 2.0));
-        sprite.setScale(sf::Vector2f(width / texSize.x, height / texSize.y));
+        sprite.setScale(sf::Vector2f(width / texSize.x, -height / texSize.y));
     };
     ~CSprite() {};
 };

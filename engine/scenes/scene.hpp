@@ -37,10 +37,11 @@ public:
     Scene(GameEngine& gameEngine);
     ~Scene() {};
 
-    virtual void update() = 0;
     virtual void sDoAction(const Action& action) = 0;
+
+    virtual void update() {m_entities.update();};
+    virtual void reset() {};
     virtual void sRender();
-    virtual void reset() = 0;
 
     void registerAction(const int& key, const std::string& actionName)
     {

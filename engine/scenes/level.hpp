@@ -24,10 +24,11 @@ public:
     Level(GameEngine& gameEngine);
     ~Level() {};
 
-    void update();
     void sDoAction(const Action& anction);
+
+    void update() override;
+    void reset() override;
     void sRender() override;
-    void reset();
 
     bool running();
 

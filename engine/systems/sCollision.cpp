@@ -178,11 +178,15 @@ void Level::applyEffect(std::shared_ptr<Entity>& effect, std::shared_ptr<Entity>
     case EFFECT_FINISH:
         if (player->cTimer)
             player->cTimer->running = false;
-            m_camera->cCamera->target.reset();
+        if (player->cControl)
+            player->cControl.reset();
+        m_camera->cCamera->target.reset();
         break;
     case EFFECT_REACTOR:
-        player->cReactor = std::make_shared<CReactor>(Vec2(10, 0), 0.5, m_gameEngine->assets().getTexture("reactorOnPlayer"));
-        player->cReactor->force = player->cReactor->force.rotate(effect->cPosition->rotation);
+        if (!player->cReactor)
+            player->cReactor = std::make_shared<CReactor>(m_gameEngine->assets().getTexture("reactorOnPlayer"));
+        player->cReactor->time = 0.5;
+        player->cReactor->force = Vec2(10, 0).rotate(effect->cPosition->rotation);
         player->cReactor->sprite.setRotation(effect->cPosition->rotation * 180 / M_PI);
         break;
     }

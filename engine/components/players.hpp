@@ -21,7 +21,7 @@ struct CLaser
     double slip;
     double lengthNeutral;
     double lengthActive;
-    double orientation = 1;
+    double orientation = -1;
     double friction = 0.1;
     double frictionOmega = 50;
     double omega = 10;
@@ -59,11 +59,10 @@ struct CLaser
 struct CReactor
 {
     Vec2    force;
-    double  time;
+    double  time=0;
     sf::Sprite sprite;
 
-    CReactor(const Vec2& force, const double& time, const sf::Texture& texture)
-    : force(force), time(time)
+    CReactor(const sf::Texture& texture)
     {
         sprite.setTexture(texture);
         auto texSize = texture.getSize();
@@ -93,13 +92,13 @@ struct CTimer
 };
 
 
-struct CControls
+struct CControl
 {
     public:
     ControlType type = CONTROL_FULL;
 
-    CControls() {};
-    ~CControls() {};
+    CControl() {};
+    ~CControl() {};
 };
 
 

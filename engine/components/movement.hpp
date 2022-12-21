@@ -23,5 +23,5 @@ struct CVelocity
 struct CGravity
 {
     public:
-    double g = 9.8;
+    double g = -9.8;
 };

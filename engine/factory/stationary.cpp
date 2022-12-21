@@ -2,46 +2,6 @@
 #include "../gameEngine.hpp"
 
 
-std::string pathJoin(const std::string& path, const std::string& file)
-{
-    if (path.back() == '/')
-        return path + file;
-    else
-        return path + "/" + file;
-}
-
-template<typename T>
-T get(const json& from, const std::string& key, const T& defValue)
-{
-    return from.contains(key)? T(from[key]) : defValue;
-}
-
-
-void Level::loadMap(const std::string& path)
-{
-    std::string mainFilePath = pathJoin(path, "map.json");
-    
-    std::ifstream f(mainFilePath);
-    std::cout << "Reading " << mainFilePath << std::endl;
-    json map = json::parse(f);
-
-    // Get map name
-    m_mapName = map["name"];
-
-    // Load items
-    for (auto item : map["items"])
-    {
-        if (item["type"] == "reactor")
-            spawnEffect(Vec2(item["x"], item["y"]), EFFECT_REACTOR, get<double>(item, "angle", 0.0));
-
-        else if (item["type"] == "finish")
-            spawnEffect(Vec2(item["x"], item["y"]), EFFECT_FINISH, get<double>(item, "angle", 0.0));
-
-        else if (item["type"] == "landscape")
-            loadLandscape(pathJoin(path, item["file"]));
-    }
-}
-
 
 void Level::loadLandscape(const std::string& path)
 {
@@ -55,9 +15,6 @@ void Level::loadLandscape(const std::string& path)
     {
         Vec2 start(landscape["X"][i], landscape["Y"][i]);
         Vec2 end(landscape["X"][i + 1], landscape["Y"][i + 1]);
-
-        start.y = -start.y;
-        end.y = -end.y;
 
         Vec2 diff = end - start;
         if (diff.x < 0)

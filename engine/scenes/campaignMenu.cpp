@@ -18,13 +18,6 @@ CampaignMenu::CampaignMenu(GameEngine& gameEngine)
 }
 
 
-void CampaignMenu::update()
-{
-    // Add and delete entities
-    m_entities.update();
-}
-
-
 void CampaignMenu::sDoAction(const Action& action)
 {
     if (action.name() == "exit" && action.type() == "start")

@@ -11,8 +11,7 @@ public:
     CampaignMenu(GameEngine& gameEngine);
     ~CampaignMenu() {};
 
-    void update();
     void sDoAction(const Action& anction);
-    // void sRender();
-    void reset() {};
+
+    void loadCampaign(const std::string& path);
 };

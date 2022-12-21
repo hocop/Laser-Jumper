@@ -1,17 +1,9 @@
 {
     "name": "Main",
     "tracks": [
-        {
-            "name": "Main 01 - Hills",
-            "landscape": "resource/campaigns/main/01/hard3.json"
-        },
-        {
-            "name": "Main 02 - Hills",
-            "landscape": "resource/campaigns/main/02/deadly2.json"
-        },
-        {
-            "name": "Main 03 - Hills",
-            "landscape": "resource/campaigns/main/03/deadly3.json"
-        }
+        "01_hills",
+        "02_hills",
+        "03_hills",
+        "04_speedcheck"
     ]
 }
