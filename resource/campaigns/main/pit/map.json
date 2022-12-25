@@ -2,20 +2,20 @@
     "name": "Escape The Pit",
     "medals":
     {
-        "gold":   22.00,
-        "silver": 30.00,
-        "bronze": 60.00
+        "gold":   13.00,
+        "silver": 20.00,
+        "bronze": 30.00
     },
     "items": [
         {
             "type": "finish",
-            "x": -15.0,
-            "y": 9
+            "x": -9.0,
+            "y": 6
         },
         {
             "type": "finish",
-            "x": 15.0,
-            "y": 8
+            "x": 11.0,
+            "y": 6
         },
         {
             "type": "landscape",

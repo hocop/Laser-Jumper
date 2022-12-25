@@ -5,6 +5,13 @@
 const double CONTACT_EPS = 0.001;
 
 
+struct Collision
+{
+    Vec2 normal;
+    double distance = 0;
+};
+
+
 class Level : public Scene
 {
 private:
@@ -45,7 +52,8 @@ public:
     void sPhysics();
     void sLifetime();
 
-    void processCollisions(std::shared_ptr<Entity>& player, std::shared_ptr<Entity>& entity);
+    void detectAndResolveCollisions(std::shared_ptr<Entity>& player, std::shared_ptr<Entity>& entity);
+    void resolveCollision(std::shared_ptr<Entity>& player, std::shared_ptr<Entity>& entity, const Collision& collision);
     void applyEffect(std::shared_ptr<Entity>& effect, std::shared_ptr<Entity>& player);
     void setShaderParams(std::shared_ptr<Entity>& entity);
 

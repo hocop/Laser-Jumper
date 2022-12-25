@@ -41,7 +41,7 @@ struct CLaser
         const sf::Texture& explosionTexture
     )
     :   lengthTgt(length), lengthNeutral(length), lengthActive(length * 2),
-        laserThicknessNeutral(laserThickness), laserThicknessActive(laserThickness * 3),
+        laserThicknessNeutral(laserThickness), laserThicknessActive(laserThickness * 5),
         explosionThicknessNeutral(explosionThickness), explosionThicknessActive(explosionThickness * 2)
     {
         auto laserTexSize = laserTexture.getSize();

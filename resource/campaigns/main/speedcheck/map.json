@@ -2,9 +2,9 @@
     "name": "Speedcheck",
     "medals":
     {
-        "gold":   10.00,
-        "silver": 10.20,
-        "bronze": 15.00
+        "gold":   11.00,
+        "silver": 15.00,
+        "bronze": 24.00
     },
     "items": [
         {
@@ -16,6 +16,11 @@
             "type": "finish",
             "x": 130.0,
             "y": 6.5
+        },
+        {
+            "type": "finish",
+            "x": 126.0,
+            "y": -1
         },
         {
             "type": "landscape",
@@ -32,6 +37,10 @@
         {
             "type": "landscape",
             "file": "floor.json"
+        },
+        {
+            "type": "landscape",
+            "file": "floor2.json"
         }
     ]
 }

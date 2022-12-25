@@ -1,10 +1,10 @@
 {
-    "name": "Hills 1",
+    "name": "Hills normal",
     "medals":
     {
-        "gold":   30.00,
-        "silver": 36.0,
-        "bronze": 45.00
+        "gold":   11.00,
+        "silver": 16.0,
+        "bronze": 25.00
     },
     "items": [
         {
@@ -15,17 +15,17 @@
         },
         {
             "type": "finish",
-            "x": 301.0,
+            "x": 101.0,
             "y": 0.5
         },
         {
             "type": "finish",
-            "x": 301.0,
+            "x": 101.0,
             "y": 1.5
         },
         {
             "type": "finish",
-            "x": 301.0,
+            "x": 101.0,
             "y": 2.5
         },
         {

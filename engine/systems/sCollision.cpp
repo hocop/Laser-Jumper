@@ -2,15 +2,9 @@
 #include "../gameEngine.hpp"
 
 
-struct Collision
+Collision detectCircleAndBoxCollision(const std::shared_ptr<Entity>& circle, const std::shared_ptr<Entity>& box)
 {
-    Vec2 normal;
-    double distance = 0;
-};
-
-
-void detectCircleAndBoxCollision(const std::shared_ptr<Entity>& circle, const std::shared_ptr<Entity>& box, Collision &col)
-{
+    Collision col;
     // Get circle params
     double r = circle->cCircleShape->radius;
     double r2 = circle->cCircleShape->radiusSquared;
@@ -23,9 +17,9 @@ void detectCircleAndBoxCollision(const std::shared_ptr<Entity>& circle, const st
     relpos = relpos.rotate(-angle);
     // Check distance first
     if (std::abs(relpos.x) > wHalf + r)
-        return;
+        return col;
     if (std::abs(relpos.y) > hHalf + r)
-        return;
+        return col;
     // Detect collision
     double distTop = relpos.y + r + hHalf;
     double distBot = hHalf - (relpos.y - r);
@@ -83,12 +77,13 @@ void detectCircleAndBoxCollision(const std::shared_ptr<Entity>& circle, const st
     }
     // Rotate normal back to world coordinates
     col.normal = col.normal.rotate(angle);
-    return;
+    return col;
 }
 
 
-void detectCircleAndLineCollision(const std::shared_ptr<Entity>& circle, const std::shared_ptr<Entity>& line, Collision &col)
+Collision detectCircleAndLineCollision(const std::shared_ptr<Entity>& circle, const std::shared_ptr<Entity>& line)
 {
+    Collision col;
     // Get circle params
     double r = circle->cCircleShape->radius;
     double r2 = circle->cCircleShape->radiusSquared;
@@ -100,11 +95,11 @@ void detectCircleAndLineCollision(const std::shared_ptr<Entity>& circle, const s
     relpos = relpos.rotate(-angle);
     // Check distance first
     if (std::abs(relpos.y) > r)
-        return;
+        return col;
     if (std::abs(relpos.x) > lHalf + r)
-        return;
+        return col;
     if (relpos.y > 0 && !line->cLineShape->doubleSided)
-        return;
+        return col;
     // Detect collision
     double distTop = relpos.y + r;
     double distBot = -relpos.y + r;
@@ -145,6 +140,7 @@ void detectCircleAndLineCollision(const std::shared_ptr<Entity>& circle, const s
     }
     // Rotate normal back to world coordinates
     col.normal = col.normal.rotate(angle);
+    return col;
 }
 
 
@@ -193,33 +189,41 @@ void Level::applyEffect(std::shared_ptr<Entity>& effect, std::shared_ptr<Entity>
 }
 
 
-void Level::processCollisions(std::shared_ptr<Entity>& player, std::shared_ptr<Entity>& entity)
+void Level::resolveCollision(std::shared_ptr<Entity>& player, std::shared_ptr<Entity>& entity, const Collision& collision)
+{
+    // Resolve collision
+    if (collision.distance > 0)
+    {
+        // Push player from the obstacle
+        if (entity->cCollision->physical)
+        {
+            player->cPosition->vec += collision.normal * collision.distance;
+            Vec2& pvel = player->cVelocity->vec;
+            pvel += collision.normal * (std::max(-(pvel * collision.normal), 0.0) * (1.0 + std::sqrt(entity->cCollision->bounciness)));
+        }
+        // Apply effect
+        if (entity->cEffect)
+            applyEffect(entity, player);
+    }
+}
+
+
+void Level::detectAndResolveCollisions(std::shared_ptr<Entity>& player, std::shared_ptr<Entity>& entity)
 {
     if (entity->cCollision)
     {
         Collision collision;
         // Detect collision
         if (entity->cRectShape)
-            detectCircleAndBoxCollision(player, entity, collision);
+        {
+            collision = detectCircleAndBoxCollision(player, entity);
+        }
         if (entity->cLineShape)
         {
-            detectCircleAndLineCollision(player, entity, collision);
+            collision = detectCircleAndLineCollision(player, entity);
             detectLaserAndLineCollision(player, entity);
         }
-        // Resolve collision
-        if (collision.distance > 0)
-        {
-            // Push player from the obstacle
-            if (entity->cCollision->physical)
-            {
-                player->cPosition->vec += collision.normal * collision.distance;
-                Vec2& pvel = player->cVelocity->vec;
-                pvel += collision.normal * (std::max(-(pvel * collision.normal), 0.0) * (1.0 + std::sqrt(entity->cCollision->bounciness)));
-            }
-            // Apply effect
-            if (entity->cEffect)
-                applyEffect(entity, player);
-        }
+        resolveCollision(player, entity, collision);
     }
 }
 
@@ -239,9 +243,9 @@ void Level::sCollision()
         for (auto coordKey : neighboringChunks)
         {
             for (auto block : m_entities.getEntities(TAG_BLOCK, coordKey))
-                processCollisions(player, block);
+                detectAndResolveCollisions(player, block);
             for (auto effect : m_entities.getEntities(TAG_EFFECT, coordKey))
-                processCollisions(player, effect);
+                detectAndResolveCollisions(player, effect);
         }
     }
 }

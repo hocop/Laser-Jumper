@@ -90,7 +90,7 @@ std::shared_ptr<Entity> Level::spawnEffect(const Vec2& pos, const EffectType& ty
     // Add shape
     double width = 0.6, height = 1;
     effect->cRectShape = std::make_shared<CRectShape>(
-        width, height, sf::Color(255, 255, 255, 128), sf::Color(0, 0, 0, 0), 0
+        width, height, sf::Color(255, 0, 255, 255), sf::Color(0, 0, 0, 0), 0
     );
     effect->cRectShape->visible = false;
 
