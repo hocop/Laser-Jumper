@@ -11,12 +11,13 @@ private:
     sf::RenderWindow        m_window;
     bool                    m_running = true;
     Assets                  m_assets;
+    std::string             m_playerName;
 
     std::map<std::string, std::shared_ptr<Scene>>   m_scenes;
     std::string                                     m_currentSceneName;
 
 public:
-    GameEngine();
+    GameEngine(std::string playerName);
     ~GameEngine();
 
     void run();
@@ -27,6 +28,7 @@ public:
     void quit();
 
     std::shared_ptr<Scene>  currentScene();
+    const std::string&      playerName();
     const std::string&      currentSceneName();
     Assets&                 assets();
     sf::RenderWindow&       window();

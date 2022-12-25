@@ -1,0 +1,25 @@
+{
+    "name": "Escape The Pit",
+    "medals":
+    {
+        "gold":   22.00,
+        "silver": 30.00,
+        "bronze": 60.00
+    },
+    "items": [
+        {
+            "type": "finish",
+            "x": -15.0,
+            "y": 9
+        },
+        {
+            "type": "finish",
+            "x": 15.0,
+            "y": 8
+        },
+        {
+            "type": "landscape",
+            "file": "level.json"
+        }
+    ]
+}

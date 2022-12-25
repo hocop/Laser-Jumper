@@ -1,5 +1,11 @@
 {
-    "name": "Main 03 - Hills",
+    "name": "Hills 3",
+    "medals":
+    {
+        "gold":   31.00,
+        "silver": 40.00,
+        "bronze": 60.00
+    },
     "items": [
         {
             "type": "reactor",

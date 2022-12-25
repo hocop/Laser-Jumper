@@ -41,6 +41,7 @@ public:
 
     virtual void update() {m_entities.update();};
     virtual void reset() {};
+    virtual void load(const std::string& path) {};
     virtual void sRender();
 
     void registerAction(const int& key, const std::string& actionName)
@@ -52,6 +53,7 @@ public:
     const EntityVec& getHud() {return m_entities.getEntities(TAG_HUD);};
 
     std::shared_ptr<Entity> spawnButtonRect(const std::string& text, const std::string& action, const Vec2& pos, const Vec2& size);
+    std::shared_ptr<Entity> spawnText(const std::string& text, const Vec2& pos, const Align& hAlign=ALIGN_CENTER, const Align& vAlign=ALIGN_CENTER);
 };
 
 

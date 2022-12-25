@@ -29,13 +29,15 @@ void GameEngine::run()
 }
 
 
-GameEngine::GameEngine()
+GameEngine::GameEngine(std::string playerName)
 {
+    m_playerName = playerName;
+
     // Create window
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8.0;
     m_window.create(
-        sf::VideoMode(1280, 720),
+        sf::VideoMode(1600, 900),
         "Game",
         sf::Style::Close,
         settings
@@ -73,6 +75,11 @@ void GameEngine::quit()
 std::shared_ptr<Scene> GameEngine::currentScene()
 {
     return m_scenes[m_currentSceneName];
+}
+
+const std::string& GameEngine::playerName()
+{
+    return m_playerName;
 }
 
 const std::string& GameEngine::currentSceneName()

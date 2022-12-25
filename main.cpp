@@ -9,22 +9,18 @@
 
 int main(int argc, char *argv[])
 {
-    GameEngine game;
+
+    std::string name = "noname";
+    if (argc == 2)
+        name = argv[1];
+    GameEngine game(name);
 
     MainMenu mainMenu(game);
     game.addScene("main_menu", std::make_shared<MainMenu>(mainMenu));
 
     CampaignMenu campaignMenu(game);
-    // campaignMenu.loadCampaign("resource/campaigns/main");
+    campaignMenu.load("resource/campaigns/main");
     game.addScene("campaign_menu", std::make_shared<CampaignMenu>(campaignMenu));
-
-    Level levelHard(game);
-    levelHard.loadMap("resource/campaigns/main/02_hills");
-    game.addScene("hard", std::make_shared<Level>(levelHard));
-
-    Level levelDeadly(game);
-    levelDeadly.loadMap("resource/campaigns/main/04_speedcheck");
-    game.addScene("deadly", std::make_shared<Level>(levelDeadly));
 
     game.run();
 }

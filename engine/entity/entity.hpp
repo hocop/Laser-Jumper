@@ -41,7 +41,7 @@ public:
     // Other
     std::shared_ptr<CEffect>        cEffect;
     // Player
-    std::shared_ptr<CControl>      cControl;
+    std::shared_ptr<CControl>       cControl;
     std::shared_ptr<CLaser>         cLaser;
     std::shared_ptr<CReactor>       cReactor;
     std::shared_ptr<CTimer>         cTimer;

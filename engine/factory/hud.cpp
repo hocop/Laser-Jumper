@@ -2,6 +2,22 @@
 #include "../scenes/level.hpp"
 
 
+std::shared_ptr<Entity> Scene::spawnText(const std::string& text, const Vec2& pos, const Align& hAlign, const Align& vAlign)
+{
+    Vec2 ws = m_gameEngine->window().getSize();
+
+    auto entity = m_entities.addEntity(TAG_HUD);
+    entity->cPosition = std::make_shared<CPosition>(Vec2(pos.x * ws.x, pos.y * ws.y));
+
+    entity->cText = std::make_shared<CText>(m_gameEngine->assets().getFont("regular"), hAlign, vAlign);
+    entity->cText->setString(text);
+
+    resetGeometryPosition(entity);
+
+    return entity;
+}
+
+
 std::shared_ptr<Entity> Level::spawnTimer()
 {
     if (m_timer)

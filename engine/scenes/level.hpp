@@ -28,6 +28,7 @@ public:
 
     void update() override;
     void reset() override;
+    void load(const std::string& path) override;
     void sRender() override;
 
     bool running();
@@ -43,7 +44,6 @@ public:
     void sCollision();
     void sPhysics();
     void sLifetime();
-    void loadMap(const std::string& path);
 
     void processCollisions(std::shared_ptr<Entity>& player, std::shared_ptr<Entity>& entity);
     void applyEffect(std::shared_ptr<Entity>& effect, std::shared_ptr<Entity>& player);

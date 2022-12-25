@@ -16,6 +16,8 @@ Level::Level(GameEngine& gameEngine)
     registerAction(sf::Keyboard::Enter,     "restart");
     registerAction(sf::Keyboard::P,         "pause");
     registerAction(sf::Keyboard::Q,         "exit");
+    registerAction(sf::Keyboard::Escape,    "exit");
+    registerAction(sf::Keyboard::BackSpace, "exit");
     registerAction(sf::Keyboard::Y,         "delete_last");
     registerAction(sf::Keyboard::C,         "change_level");
 
@@ -41,7 +43,7 @@ void Level::update()
 }
 
 
-void Level::loadMap(const std::string& path)
+void Level::load(const std::string& path)
 {
     std::string mainFilePath = rd::join(path, "map.json");
     

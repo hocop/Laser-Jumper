@@ -1,9 +1,10 @@
 {
     "name": "Main",
-    "tracks": [
-        "01_hills",
-        "02_hills",
-        "03_hills",
-        "04_speedcheck"
+    "maps": [
+        "pit",
+        "hills_1",
+        "hills_2",
+        "hills_3",
+        "speedcheck"
     ]
 }

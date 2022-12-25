@@ -9,11 +9,16 @@ MainMenu::MainMenu(GameEngine& gameEngine)
 
     // Register actions
     registerAction(sf::Keyboard::Q,         "exit");
+    registerAction(sf::Keyboard::Escape,    "exit");
     registerAction(sf::Keyboard::Space,     "play");
+    registerAction(sf::Keyboard::Enter,     "play");
+
+    // Add text
+    spawnText("Hello, " + m_gameEngine->playerName(),   Vec2(0.2, 0.2),     ALIGN_CENTER, ALIGN_CENTER);
 
     // Add buttons
-    spawnButtonRect("Choose level",         "play",    Vec2(0.1, 0.2),    Vec2(0.4, 0.1));
-    spawnButtonRect("Exit",                 "exit",         Vec2(0.1, 0.6),    Vec2(0.4, 0.1));
+    spawnButtonRect("Choose level",         "play",     Vec2(0.1, 0.4),    Vec2(0.4, 0.1));
+    spawnButtonRect("Exit",                 "exit",     Vec2(0.1, 0.6),    Vec2(0.4, 0.1));
 }
 
 
