@@ -21,6 +21,27 @@ struct Derivatives
     Vec2 acc;
     double dLength = 0;
     double slipVel = 0;
+
+    Derivatives operator*(const double& s)
+    {
+        Derivatives new_d;
+        new_d.acc = acc * s;
+        new_d.dLength = dLength * s;
+        new_d.slipVel = slipVel * s;
+        return new_d;
+    };
+    Derivatives operator/(const double& s)
+    {
+        return *this * (1.0 / s);
+    };
+    Derivatives operator+(const Derivatives& other)
+    {
+        Derivatives new_d;
+        new_d.acc = acc + other.acc;
+        new_d.dLength = dLength + other.dLength;
+        new_d.slipVel = slipVel + other.slipVel;
+        return new_d;
+    };
 };
 
 
@@ -114,13 +135,17 @@ void Level::sPhysics()
 
     if (running())
     {
-        // Move objects
-        for (auto entity : m_entities.getEntities())
+        // Move players
+        for (auto entity : m_entities.getEntities(TAG_PLAYER))
         {
             if (entity->cPosition && entity->cVelocity)
             {
                 auto state = getState(entity);
-                auto drvs = computeDerivatives(entity, state);
+                auto k1 = computeDerivatives(entity, state);
+                auto k2 = computeDerivatives(entity, changeState(entity, state, k1, 0.5 * m_deltaT));
+                auto k3 = computeDerivatives(entity, changeState(entity, state, k2, 0.5 * m_deltaT));
+                auto k4 = computeDerivatives(entity, changeState(entity, state, k3, m_deltaT));
+                auto drvs = (k1 + k2 * 2 + k3 * 2 + k4) / 6;
                 auto newState = changeState(entity, state, drvs, m_deltaT);
 
                 entity->cPosition->vec += newState.vel * m_deltaT + drvs.acc * deltaTSqhalf;

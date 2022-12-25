@@ -10,7 +10,7 @@
 #include "entity.hpp"
 
 
-const Vec2 CHUNK_SIZE(1, 4);
+const Vec2 CHUNK_SIZE(1, 5);
 
 
 typedef std::vector<std::shared_ptr<Entity>>                                        EntityVec;
